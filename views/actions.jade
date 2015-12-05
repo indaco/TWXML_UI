@@ -50,14 +50,6 @@ block content
 				include partials/clusters.jade
 			#prediction.tab-pane.fade
 				include partials/prediction.jade
-
-	script.
-		var CONFIGS = {
-		  protocol: "#{config.protocol}",
-		  host: "#{config.host}",
-			port: "#{config.port}",
-			neuron_app_id: "#{config.neuron_app_id}"
-		};
 		
 	script(src="/javascripts/actions.js")
 	script(src="/javascripts/validators.js")

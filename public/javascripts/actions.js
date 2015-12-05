@@ -44,7 +44,7 @@ function countDataSets() {
 
 $(document).ready(function() {
   var twxml_module = TWXMLModule;
-  var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
+  //var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
   $(function() {
     $('[data-toggle="popover"]').popover();
   });
@@ -73,7 +73,6 @@ $(document).ready(function() {
       countDataSets();
     }).fail(function(xhr, status, error) {
       twxml_module.showErrorMessage('#create-status-response', xhr);
-      //console.log(xhr);
     });
   }
   getDataSetList();
@@ -99,29 +98,21 @@ $(document).ready(function() {
   $('#createbtn').click(function(event) {
     event.preventDefault();
 
-    var _url = twxml_module.buildURL("/datasets/");
+    //var _url = twxml_module.buildURL("/datasets/");
     var _request_body = {
-      'name': $('#name').val(),
-      'description': $('#description').val(),
-      'optimized': $('#optimized').find(":selected").val()
+      "name": $('#name').val(),
+      "description": $('#description').val(),
+      "optimized": $('#optimized').find(":selected").val()
     };
-
-    //$('#collapseOne').addClass('in');
-    twxml_module.doPOST(
-      headers,
-      _url,
-      _request_body,
-      function(res) {
-        dataset_name = $('#name').val();
-        setDSInputFields(dataset_name);
-        $('#create-content').html(JSONPrinter.json.prettyPrint(res));
-        drawRow(_request_body);
-        countDataSets();
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );
+    $.post('/create_dataset', _request_body, function(data) {
+      dataset_name = $('#name').val();
+      setDSInputFields(dataset_name);
+      $('#create-content').html(JSONPrinter.json.prettyPrint(data));
+      drawRow(data);
+      countDataSets();
+    }).fail(function(xhr, status, error) {
+      twxml_module.showErrorMessage('#create-status-response', xhr);
+    });
   });
 
   /*******************/

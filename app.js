@@ -20,7 +20,8 @@ var home_page = require('./routes/index'),
 // Async Routes setup
 // ------------------------------------------------
 var async_version = require('./routes/async_version'),
-    async_dataset_list = require('./routes/async_dataset_list');
+    async_dataset_list = require('./routes/async_dataset_list'),
+    async_create_dataset = require('./routes/async_create_dataset');
 var app = express();
 
 // view engine setup
@@ -38,25 +39,19 @@ app.use(helmet());
 app.use(cors());
 app.use(express.static(path.join(__dirname, '/public')));
 
-var neuron_configs = {
-    url: config.protocol + '://' + config.host + ":" + config.port + "/1.0",
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'neuron-application-id': config.neuron_app_id
-    }
-};
-
-app.set('neuron_configs', neuron_configs);
-
 // App Locals
 // ------------------------------------------------
 app.locals.pretty = true;
-app.locals.config = {
+app.locals.neuron_config = {
   protocol: config.get('protocol'),
   host: config.get('host'),
   port: config.get('port') || 80,
   neuron_app_id: config.get('neuron_app_id')
+};
+app.locals.neuron_header = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'neuron-application-id': config.neuron_app_id
 };
 
 // Pages Routes
@@ -67,6 +62,7 @@ app.use('/glossary', glossary_page);
 // Async Routes
 app.use('/version', async_version);
 app.use('/dataset_list', async_dataset_list);
+app.use('/create_dataset', async_create_dataset);
 
 // Error handlers
 // ------------------------------------------------
