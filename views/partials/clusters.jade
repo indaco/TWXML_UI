@@ -1,0 +1,79 @@
+br
+br
+form#clustersform.form-horizontal
+  fieldset
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='clusters_ds_name_input') Data Set name
+      .col-md-6
+        input#clusters_ds_name_input.form-control.input-md(type="text", name="clusters_ds_name_input", disabled='disabled')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='clusters_ds_goal_input') Goal
+      .col-md-6
+        select#clusters_ds_goal_select.form-control(name='Goal')
+        //input#clusters_ds_goal_input.form-control.input-md(type="text", name="clusters_ds_goal_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='clusters_goal_desc_input') Description
+      .col-md-6
+        input#clusters_goal_desc_input.form-control.input-md(type="text", name="clusters_goal_desc_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='clusters_hierarchy_input') Hierarchy
+      .col-md-6
+        input#clusters_hierarchy_input.form-control.input-md(type="text", name="clusters_hierarchy_input", value=2)
+        span.help-block The number of clusters to generate. Value must be greater than or equal to 2. OPTION 1 (without secondary clusters) : [ x ] - OPTION 2 (with secondary clusters): [ x , y ]
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='clusters-btn')
+      .col-md-6
+        button#clusters-btn.btn.btn-success(type="submit") Submit
+output#clusters_status_response
+.container-fluid
+  .row
+    .col-md-6
+      #accordion.panel-group
+        #panel11.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseEleven', href='#collapseEleven') Server Response
+          #collapseEleven.panel-collapse.collapse
+            .panel-body
+              pre
+                code#clusters_content
+    .col-md-6
+      #accordion.panel-group
+        #panel12.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseTwelve', href='#collapseTwelve') Job Status
+          #collapseTwelve.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='clusters_job_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#clusters_job_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_clusters_status_btn.btn.btn-success(type='button') Get Job Status
+              pre
+                code#get_clusters_content_status
+  .row
+    .col-md-12
+      #accordion.panel-group
+        #panel13.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseThirteen', href='#collapseThirteen') clusters Results
+          #collapseThirteen.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='clusters_results_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#clusters_results_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_clusters_results_btn.btn.btn-success(type='button') Get Results
+              pre
+                code#clusters_results_content

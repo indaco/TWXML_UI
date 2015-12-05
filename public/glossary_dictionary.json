@@ -1,0 +1,193 @@
+[{
+  "term": "Backpropagation",
+  "definition": "Backward propagation of errors (backprop) which is used for [Training] and [Scoring] operations. The neural network learns from many inputs.",
+  "link": "http://en.wikipedia.org/wiki/Backpropagation"
+}, {
+  "term": "Binning",
+  "definition": "The process of replacing real values with a nominal representation of the range of values (i.e. a bucket).  The following set {0,1,2,3,4,5,10} could be binned into { [0-1], [2-3], [4-5], [10+] }.  This is useful for correcting outliers or flattening the distribution of values",
+  "link": ""
+}, {
+  "term": "Cluster(s)",
+  "definition": "A subset of data which share mutual characteristics.  This information is useful in determining commonalities in data.  By default, an investigation will create 2, 3, 5 and 7 clusters of information.  An investigation must have at least 1 cluster operation",
+  "link": ""
+}, {
+  "term": "Cluster Scoring",
+  "definition": "Analysis which assigns a cluster to a previously unseen record. A model must first be created based on a sufficient sample of [Training] data, this model is then applied to a [Scoring]record(s) and a cluster is assigned.",
+  "link": ""
+}, {
+  "term": "Correlation",
+  "definition": "a broad statistical relationships between two independent variables involving some kind of dependence",
+  "link": "http://en.wikipedia.org/wiki/Correlation_and_dependence"
+}, {
+  "term": "Data Configure Service",
+  "definition": "ThingWorx Machine Learning service used to create and/or alter a dataset, which is a container that will hold all of your data. Multiple datasets can be created to allow for different analyses.",
+  "link": ""
+}, {
+  "term": "Data Mining",
+  "definition": "",
+  "link": "http://en.wikipedia.org/wiki/Data_mining"
+}, {
+  "term": "Data Normalization",
+  "definition": "The process by which ThingWorx Machine Learning internally transforms values into a decimal range between 0 and 1.  This process also pivots string values into columnar booleans (see Nominal Expansion).",
+  "link": ""
+}, {
+  "term": "Data Type",
+  "definition": "The ThingWorx Machine Learning-specific datatype.  Can be the following: STRING : An alphanumeric value conforming to the UTF-8 code page; Ordered STRING : An alphanumeric value conforming to the UTF-8 code page, presented as an ordered list of values (e.g. January, February, March or Small, Medium, Large).  All string values must be represented in the list; INTEGER : A positive or negative whole number not containing a decimal point; DOUBLE/NUMERIC : A positive or negative number which may or may not contain a decimal point; BOOLEAN : A value representing true/false",
+  "link": ""
+}, {
+  "term": "Dataset",
+  "definition": "A file to be used for ThingWorx Machine Learning consumption.  In self-service, this is where a file gets uploaded to be used for investigation. In ThingWorx Machine Learning 3.0 it is the container defined by [Configure Data] and used to hold [Data Submitted] via API. This self-service file has to meet the following criteria: it must be in CSV format (comma-separated ',').  ThingWorx Machine Learning cannot interpret quoted identifiers or commas in stringsIt must not have a header; It cannot contain special characters; The number of columns must match the number of columns specified in the Metadata file.",
+  "link": ""
+}, {
+  "term": "Dependent Variable",
+  "definition": "the variable in an experiment which is being measured. For example, in a model explaining film revenue the Dependent is the actual earnings of each film. See also: Topic, Goal, Objective.",
+  "link": ""
+}, {
+  "term": "Descriptors",
+  "definition": "[features] within a [dataset] which cannot be easily or meaningfully altered within the context of an experiment. Context is important. For example, within a model explaining film revenue the rating of a movie, i.e. PG-13, R, is a descriptor. It cannot be changed. However, in a model explaining number of minutes a child is likely to watch a movie selected by a teacher, this could instead be a [lever] because the teacher could easily select a different film specifically to change the rating.",
+  "link": ""
+}, {
+  "term": "Display Only",
+  "definition": "[feature] within a [dataset] which is used strictly for post-analysis reporting but is explicitly withheld from actual automated analysis. For example, the specific name of a business within a broad profitability analysis model is not useful for ThingWorx Machine Learning analysis but is may be helpful for drilling down into results of the analysis.",
+  "link": ""
+}, {
+  "term": "Dunmpnet",
+  "definition": "A web interrogation service used to query the serialized model object to determine overall model [RMSE] as well as the RMSE of individual scoring bins and training and validation results.",
+  "link": ""
+}, {
+  "term": "Feature",
+  "definition": "Any column of a dataset which can be used for analysis.",
+  "link": "http://en.wikipedia.org/wiki/Features_%28pattern_recognition%29"
+}, {
+  "term": "Filters",
+  "definition": "a set of logical criteria applied to features of a [dataset] in order to limit the dataset to a particular subset of records. For example, a film analysis model can be filtered by “Rating = G or Rating = PG” to create a dataset which can be specifically used for analysis of child oriented movies. See also: Groups.",
+  "link": ""
+}, {
+  "term": "Goal",
+  "definition": "A feature which is the dependent variable of a dataset or the topic of an investigation",
+  "link": ""
+}, {
+  "term": "Groups",
+  "definition": "See also 'Filters'",
+  "link": ""
+}, {
+  "term": "Identifier",
+  "definition": "the primary key within a [dataset], unique row identifier that is typically somehow logically derived from the data being analyzed.",
+  "link": ""
+}, {
+  "term": "Investigation",
+  "definition": "A workspace created in ThingWorx Machine Learning Self-Service.  This workspace may have the results of an investigation or just the setup information.  An investigation typically consists of a topic, a data source (dataset) and the resulting Signals and Clusters",
+  "link": ""
+}, {
+  "term": "K-Nearest Neighbors",
+  "definition": "the pattern recognition non-parametric algorithm used by ThingWorx Machine Learning during [Scoring] to calculate the distance between the scoring record and training examples",
+  "link": ""
+}, {
+  "term": "Location Key(s)",
+  "definition": "[feature(s)] which are designated via [data configuration] to identify locality. In most cases a zip code is best, this will let us best describe a region using financial, employment, health, quality of life and various social indicators. If zip is unavailable, the next higher-level locality is best, broadly in order of highest fidelity to lowest: zip3, county, MSA, City, State, Region, and Country.",
+  "link": ""
+}, {
+  "term": "Machine Learning",
+  "definition": "",
+  "link": "http://en.wikipedia.org/wiki/Machine_learning"
+}, {
+  "term": "Metadata File",
+  "definition": "A file which describes the dataset.",
+  "link": ""
+}, {
+  "term": "Modelling (data)",
+  "definition": "The process of transforming data into a ThingWorx Machine Learning-ready dataset",
+  "link": ""
+}, {
+  "term": "MI (Mutual Information) / MI Score",
+  "definition": "A measure of the degree of dependence between a particular signal and the topic. The higher the MI, the stronger the dependence. Generally, MI is the preferred means of quantifying the 'strength' of the [signal] of a given [feature]. Note that the MI is not directional, that is a high MI does not imply a positive or negative correlation between feature and objective, only that a high amount of information is shared between the two.",
+  "link": "http://en.wikipedia.org/wiki/Mutual_information"
+}, {
+  "term": "Nominal",
+  "definition": "A piece of data which is only differentiated in value by its name.  Gender, Ethnicity, city or state are examples.  Usually a string.",
+  "link": "http://en.wikipedia.org/wiki/Nominal_data#Nominal_scale"
+}, {
+  "term": "Nominal Ordering",
+  "definition": "Allows for rank order (1st, 2nd, 3rd, etc.) by which data can be sorted, but still does not allow for relative degree of difference between them.  Related to Ordered String data type.",
+  "link": "http://en.wikipedia.org/wiki/Nominal_data#Ordinal_scale"
+}, {
+  "term": "Nominal Sampling",
+  "definition": "The process of restricting the number of nominal values based on the number of occurrences of the value within the set.  A general 'rule of thumb' is to group any nominal value into an 'Other' bucket where the value's representation is 2% or less of the total set e.g. if there are 1005 cities in a set, the bottom 6 cities based on number of values will be grouped into 'Other'. Note: Sampling does not need to be based on solely getting below 1000 distinct values",
+  "link": ""
+}, {
+  "term": "Normalization",
+  "definition": "The internal process by which ThingWorx Machine Learning assigns values to elements in an input dataset.  Normalized datasets are used for Signals.  Data types are converted in the following manner: Numeric values in a column are converted to values between 0 and 1 based on the minimum and maximum values and the relative distance of all other items in that set; Boolean values are converted to 0 and 1; Strings are replaced with numeric representations relative to the number of items in the set.  For instance: { High, Low, Medium } would be replaced with { 0, 1, 2 }.  If ORDER is specified in a list of values (e.g. Low, Medium, High), the sample dataset would be replaced with { 2, 0, 1 }.  If no order is specified, the string will be replaced by the order in which is appears in the set.  See the first example. Normalized datasets are used for Signals, Clusters and Decision Trees",
+  "link": ""
+}, {
+  "term": "NULL",
+  "definition": "A representation of an unknown value or the absence of data.  For ThingWorx Machine Learning, NULL values (Values listed as empty string or '{ data,data,,data }') are normalized in the following ways: Ordinals (numbers): NULL values are normalized to 0.5, which translates to the average of the set; BOOLEAN: NULL values are normalized to 0 (False); Nominal: NULL values are treated as just another value in the set and are treated as such.",
+  "link": ""
+}, {
+  "term": "Objective",
+  "definition": "A feature which is the dependent variable of a dataset or the topic of an investigation. See also: Topic, Goal, Dependent Variable.",
+  "link": ""
+}, {
+  "term": "Ordinal",
+  "definition": "A numeric data type (INTEGER or DOUBLE).",
+  "link": ""
+}, {
+  "term": "Outlier",
+  "definition": "A piece of data which falls significantly outside of the normal range of values (e.g. if the set of data is { 1,2,3,4,5,10000 }, 10000 would be considered an outlier).  In a normal distribution, if a data point falls outside of ~2 standard deviations of a set, it's considered an outlier.",
+  "link": "http://en.wikipedia.org/wiki/Outlier"
+}, {
+  "term": "Oversampling",
+  "definition": "A sampling technique used to account for very low occurrence of a specific example of an [objective]. Generally speaking if the desired objective occurrence is < 2% of the dataset oversampling is required",
+  "link": ""
+}, {
+  "term": "r, Pearson's r",
+  "definition": "Measure of linear correlation between two variables where 1 is total positive correlation, 0 is no correlation and -1 is total negative correlation.",
+  "link": "http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient"
+}, {
+  "term": "r^2",
+  "definition": "A measure of how well a particular model fits or represents the behavior of the data",
+  "link": "http://en.wikipedia.org/wiki/Coefficient_of_determination"
+}, {
+  "term": "RMSE",
+  "definition": "",
+  "link": "http://en.wikipedia.org/wiki/Root-mean-square_deviation"
+}, {
+  "term": "Sampling",
+  "definition": "The process of selecting data for a ThingWorx Machine Learning dataset, using randomization or some other method.",
+  "link": ""
+}, {
+  "term": "Scoring",
+  "definition": "A ThingWorx Machine Learning operation used to rate or score a dataset against an existing ThingWorx Machine Learning model",
+  "link": ""
+}, {
+  "term": "Signal(s)",
+  "definition": "A feature which has gone through ThingWorx Machine Learning and has a score assigned to it.  Signals are categorized below: Very weak: Very Low MI; Weak: Low MI; Moderate: Medium MI; Strong: Somewhat High MI; Very Strong: Very high MI",
+  "link": ""
+}, {
+  "term": "(ThingWorx Machine Learning) Self-Service",
+  "definition": "A web-based platform to perform data analysis",
+  "link": ""
+}, {
+  "term": "Snapshot",
+  "definition": "A point-in-time representation of the data in ThingWorx Machine Learning Self-Service.  This is what data is used for an investigation.  A snapshot must have a topic assigned to it for ThingWorx Machine Learning Self-Service to use it as an investigation datasource",
+  "link": ""
+}, {
+  "term": "Time Horizont",
+  "definition": "A point in time where your predicted value begins to be explained by your dependent variable. e.g. When predicting next year cost to insurance company of a particular patient, it is important to not to unwittingly include any data from that year which would “tip the hand” to ThingWorx Machine Learning. This is of course impossible in the present, because we do not in fact have this information about the future, but it is a very important consideration when constructing training datasets which reflect history. We must only include information that is able to be known in advance of the timeframe occupied by the Objective. Often business operational considerations must be made and the information that is able to be known is amended to “information that is able to be known and meaningfully acted on” in advance of the objective taking place",
+  "link": ""
+}, {
+  "term": "Topic",
+  "definition": "A feature which is the dependent variable of a dataset or the topic of an investigation",
+  "link": ""
+}, {
+  "term": "Training",
+  "definition": "A ThingWorx Machine Learning operation used to learn about a dataset and create a statistical model based on the factors contributing to the change in the dependent variable.  This is used for scoring and prediction",
+  "link": ""
+}, {
+  "term": "Validation, training",
+  "definition": "ThingWorx Machine Learning internal process used to validate and optimize the model. A random 10% of the training dataset is withheld from training; these withheld examples are subsequently used to validate the model constructed.",
+  "link": ""
+}, {
+  "term": "Web Service(s)",
+  "definition": "A list of services used to interact with ThingWorx Machine Learning outside of the typical self-service model",
+  "link": ""
+}]

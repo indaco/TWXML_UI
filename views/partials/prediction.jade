@@ -1,0 +1,112 @@
+br
+br
+form#predictionsform.form-horizontal
+  fieldset
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='predictions_ds_name_input') Data Set name
+      .col-md-6
+        input#predictions_ds_name_input.form-control.input-md(type="text", name="predictions_ds_name_input", disabled='disabled')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='predictions_ds_goal_input') Goal
+      .col-md-6
+        select#predictions_ds_goal_select.form-control(name='Goal')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='predictions_goal_desc_input') Description
+      .col-md-6
+        input#predictions_goal_desc_input.form-control.input-md(type="text", name="predictions_goal_desc_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='predictions_iterativeTrainingRecordSampleSize_input') Iterative Training Record Sample Size
+      .col-md-6
+        input#predictions_iterativeTrainingRecordSampleSize_input.form-control.input-md(type="text", name="predictions_iterativeTrainingRecordSampleSize_input", value=8192, data-toggle="popover", data-animation="true" data-trigger="hover" data-placement="bottom" data-content="The number of records added with every iteration of training.")
+
+    // Select EnsableTechnique
+    .form-group
+      label.col-md-4.control-label(for='predictions_ensabletechnique_select') Ensable Technique
+      .col-md-6
+        select#predictions_ensabletechnique_select.form-control(name='predictions_ensabletechnique_select', data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom" data-content="The ensemble learning technique used to minimize prediction error.")
+          option(value='ELITE_AVERAGE') ELITE_AVERAGE
+          option(value='SOLOIST') SOLOIST
+    // Select Comparison Metric
+    .form-group
+      label.col-md-4.control-label(for='predictions_comparisonmetric_select') Comparison Metric
+      .col-md-6
+        select#predictions_comparisonmetric_select.form-control(name='predictions_comparisonmetric_select', data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom", data-content="Sets how ThingWorx ML compares sets of learners. Available choices include: 'PEARSONS' (default value if nothing is supplied), 'RSME' (Root Mean Square Error), and 'ROC' (Receiver Operating Characteristic area interpolated from a single ROC Point; can only be used with boolean goals).")
+          option(value='PEARSONS') PEARSONS - Pearsons Correlation
+          option(value='RSME') RSME - Root Mean Square Error
+          option(value="ROC") ROC - Receiver Operating Characteristic
+    // Checkbox Group Learners
+    .form-group
+      label.col-md-4.control-label(for='predictions_learners_select') Ensable Technique
+      .col-lg-6
+        div.input-group
+          span.input-group-addon.beautiful
+            input#BACKPROP_checkbox(type="checkbox" aria-label="...", checked)
+          input#BACKPROP(type="text" class="form-control" aria-label="...", value="BACKPROP", readonly)
+          span.input-group-addon.beautiful
+            input#GRADIENT_BOOST_checkbox(type="checkbox" aria-label="...", checked)
+          input#GRADIENT_BOOST(type="text" class="form-control" aria-label="...", value="GRADIENT_BOOST", readonly)
+        br
+        div.input-group
+          span.input-group-addon.beautiful
+            input#NEURON_DECISION_TREE_checkbox(type="checkbox" aria-label="...",  checked)
+          input#NEURON_DECISION_TREE(type="text" class="form-control" aria-label="...", value="NEURON_DECISION_TREE", readonly)
+          span.input-group-addon.beautiful
+            input#LINEAR_REGRESSION_checkbox(type="checkbox" aria-label="...", checked)
+          input#LINEAR_REGRESSION(type="text" class="form-control" aria-label="...", value="LINEAR_REGRESSION", readonly)
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='predictions-btn')
+      .col-md-6
+        button#predictions-btn.btn.btn-success(type="button") Submit
+output#predictions_status_response
+.container-fluid
+  .row
+    .col-md-6
+      #accordion.panel-group
+        #panel14.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseFourteen', href='#collapseFourteen') Server Response
+          #collapseFourteen.panel-collapse.collapse
+            .panel-body
+              pre
+                code#predictions_content
+    .col-md-6
+      #accordion.panel-group
+        #panel15.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseFifteen', href='#collapseFifteen') Job Status
+          #collapseFifteen.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='predictions_job_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#predictions_job_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_predictions_status_btn.btn.btn-success(type='button') Get Job Status
+              pre
+                code#get_predictions_content_status
+  .row
+    .col-md-12
+      #accordion.panel-group
+        #panel16.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseSixteeen', href='#collapseSixteeen') Predictions Results
+          #collapseSixteeen.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='predictions_results_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#predictions_results_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_predictions_results_btn.btn.btn-success(type='button') Get Results
+              pre
+                code#predictions_results_content

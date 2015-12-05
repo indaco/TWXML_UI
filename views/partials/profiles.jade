@@ -1,0 +1,99 @@
+br
+br
+form#profilesform.form-horizontal
+  fieldset
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_ds_name_input') Data Set name
+      .col-md-6
+        input#profiles_ds_name_input.form-control.input-md(type="text", name="profiles_ds_name_input", disabled='disabled')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_ds_goal_input') Goal
+      .col-md-6
+        select#profiles_ds_goal_select.form-control(name='Goal')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_goal_desc_input') Description
+      .col-md-6
+        input#profiles_goal_desc_input.form-control.input-md(type="text", name="profiles_goal_desc_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_maxdepth_input') Max Depth
+      .col-md-6
+        input#profiles_maxdepth_input.form-control.input-md(type="text", name="profiles_maxdepth_input", value=4 data-toggle="popover" data-animation="true" data-trigger="hover" data-placement="bottom" data-content="Indicates the number of levels deep a profile search can go before ThingWorx ML stops searching. For example, 3 levels deep would mean that ThingWorx ML can create paths that consider 3 factors concurrently, while 4 levels deep means that it can go an additional level (or one additional feature deeper in its search). Acceptable values are between 1 and 10.")
+    // Select Basic
+    .form-group
+      label.col-md-4.control-label(for='profiles_maximixe_select') Maximize
+      .col-md-6
+        select#profiles_maximixe_select.form-control(name='profiles_maximixe_select' data-toggle="popover" data-animation="true" data-trigger="hover" data-placement="bottom" data-content="Indicates that you want to search for profiles that achieve the highest (true) or lowest (false) outcome for a profile.")
+          option(value='true') True
+          option(value='false') False
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_filter_input') Filter
+      .col-md-6
+        input#profiles_filter_input.form-control.input-md(type="text", name="profiles_filter_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_minPopulationPercentage_input') Min Population Percentage
+      .col-md-6
+        input#profiles_minPopulationPercentage_input.form-control.input-md(type="text", name="profiles_minPopulationPercentage_input", value=0.0025, data-toggle="popover" data-animation="true" data-trigger="hover" data-placement="bottom" data-content="Indicates the % of the audience population threshold that must be met for ThingWorx ML to return a population. If the minimum threshold is not met, it will not return a profile for a given combination of factors. For example this would enable you to return profile results where any given profile represents at least 2% of the overall population. This value must be greater than 0 and less than 1.")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles_exclusions_input') Exclusions
+      .col-md-6
+        input#profiles_exclusions_input.form-control.input-md(type="text", name="profiles_exclusions_input", data-toggle="popover" data-animation="true" data-trigger="hover" data-placement="bottom" data-content="A list of any features (string) to be excluded from the analysis job.")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='profiles-btn')
+      .col-md-6
+        button#profiles-btn.btn.btn-success(type="submit") Submit
+output#profiles_status_response
+.container-fluid
+  .row
+    .col-md-6
+      #accordion.panel-group
+        #panel8.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseEight', href='#collapseEight') Server Response
+          #collapseEight.panel-collapse.collapse
+            .panel-body
+              pre
+                code#profiles_content
+    .col-md-6
+      #accordion.panel-group
+        #panel9.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseNine', href='#collapseNine') Job Status
+          #collapseNine.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='profiles_job_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#profiles_job_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_profiles_status_btn.btn.btn-success(type='button') Get Job Status
+              pre
+                code#get_profiles_content_status
+  .row
+    .col-md-12
+      #accordion.panel-group
+        #panel10.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseTen', href='#collapseTen') Profiles Results
+          #collapseTen.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='profiles_results_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#profiles_results_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_profiles_results_btn.btn.btn-success(type='button') Get Results
+              pre
+                code#profiles_results_content

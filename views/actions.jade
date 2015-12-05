@@ -1,0 +1,67 @@
+extends layouts/page_layout
+
+block content
+	br
+	br
+	br
+	.container
+		.jumbotron
+			p.lead Use this tool as a way to quickly start any new project
+			p
+				button#checkVersionBtn.btn.btn-primary(name='checkVersionBtn') Get ThingWorx ML Version
+				#responseVersionArea
+		ul.nav.nav-tabs
+			li.active
+				a(data-toggle='tab', href='#start') Start
+			li
+				a(data-toggle='tab', href='#configure') Configure Data Set
+			li
+				a(data-toggle='tab', href='#upload') Upload Data
+			li
+				a(data-toggle='tab', href='#filters') Filters
+			li
+				a(data-toggle='tab', href='#signals') Signals
+			li
+				a(data-toggle='tab', href='#profiles') Profiles
+			li
+				a(data-toggle='tab', href='#clusters') Clusters
+			li
+				a(data-toggle='tab', href='#prediction') Prediction
+		.tab-content
+			#start.tab-pane.fade.in.active
+				.container-fluid
+					.row
+						.col-md-12
+							include partials/list.jade
+					.row
+						.col-md-12
+							include partials/create.jade	
+			#configure.tab-pane.fade
+				include partials/config_dataset.jade
+			#upload.tab-pane.fade
+				include partials/file_upload.jade
+			#filters.tab-pane.fade
+				include partials/filters.jade
+			#signals.tab-pane.fade
+				include partials/signals.jade 
+			#profiles.tab-pane.fade
+				include partials/profiles.jade
+			#clusters.tab-pane.fade
+				include partials/clusters.jade
+			#prediction.tab-pane.fade
+				include partials/prediction.jade
+
+	script.
+		var CONFIGS = {
+		  protocol: "#{config.protocol}",
+		  host: "#{config.host}",
+			port: "#{config.port}",
+			neuron_app_id: "#{config.neuron_app_id}"
+		};
+		
+	script(src="/javascripts/actions.js")
+	script(src="/javascripts/validators.js")
+	script(src="/javascripts/JSONPrinter.js")
+	script(src="/javascripts/TWXMLModule.js")
+	script(src="/javascripts/3rdparty/bootstrap-spinner.min.js")
+	

@@ -1,0 +1,25 @@
+br
+br
+form#configdsform.form-horizontal
+  fieldset
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='config-dataset-name-input') Data Set name
+      .col-md-6
+        input#config-dataset-name-input.form-control.input-md(type="input", disabled='disabled')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='') JSON File for the Data Set Configuration
+      .col-md-6
+        input#input-json-file.btn-primary(type="file")
+output#json-list
+output#config-status-response
+#accordion.panel-group
+  #panel2.panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a.collapsed(data-toggle='collapse', data-target='#collapseTwo', href='#collapseTwo') Server Response
+    #collapseTwo.panel-collapse.collapse
+      .panel-body
+        pre
+          code#json-content

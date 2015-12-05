@@ -1,0 +1,91 @@
+extends layouts/page_layout
+
+block content
+	br
+	br
+	br
+	.container.marketing
+		.row
+			br
+			.row.featurette
+				.col-md-7.col-md-push-5
+					h1.featurette-heading
+						| ThingWorx Machine Learning
+						span.text-muted  Process.           
+					p.lead
+						mark Powerful advanced and predictive analytics capabilities for ThingWorx developers. 
+					p 
+						big Few know how to create, operationalize, and maintain advanced and predictive intelligence. That’s why we’ve built powerful machine learning technology inside the ThingWorx platform – to automate these complex processes.
+					p
+						big
+							strong ThingWorx Machine Learning enables developers to easily:
+							ul
+								li Build solutions that include predictive analytics
+								li Scale advanced analytics to the largest of datasets
+								li Integrate proactive intelligence into any ThingWorx-powered solution
+								li All without having to be an expert in data science or complex mathematics.
+				.col-md-5.col-md-pull-7
+					img.featurette-image.img-responsive.center-block(src='images/model_building.jpg', alt='ThingWorx Machine Learning Process')       
+			// /END THE FEATURETTES
+		div.page-header
+			h3 Important Terms and Concepts
+		br
+		.row
+			.col-lg-4
+				img.img-circle(src='images/data_sources.png', alt='signals image', width='80', height='80')   
+				h2 Data Sources
+				p.lead Where does the data come from that we analyze?
+				p.text-muted
+					big Data sources can be internal (Sales data, Service data, Customer data, Data from our "things") or externals (3rd party sources like public sources or commercial sources, weather, census, demographics, research, other.)
+			.col-lg-4
+				img.img-circle(src='images/signals.png', alt='signals image', width='80', height='80')   
+				h2 Signals
+				p.lead How predictive is your information?
+				p.text-muted
+					big A "signal" represents the strength or weakness a particular input (independent variable) has in relation to the Topic (dependent variable). 
+				p.text-muted
+					big For example, “what are the strongest predictors for a risk of unplanned downtime?” Signals vary based on the topic and the historical data available. 
+				p.text-muted
+					big ThingWorx ML uses a Signals algorithm to later determine what variables may be useful in the analysis
+			.col-lg-4
+				img.img-circle(src='images/profiles.png', alt='Profiles image', width='80', height='80')            
+				h2 Profiles
+				p.lead Identify groups of records that over-perform, or under-perform.
+				p.text-muted
+					big Individuals that are identical based on a set of attributes that generally over-perform or under-perform.  
+				big
+					ul
+						li.text-muted Characteristics or attributes that define the profile
+						li.text-muted Average performance of that profile against the Topic or Goal
+						li.text-muted Size of the Group (as a % of population and absolute size)
+
+		br
+		br
+		.row
+			.col-lg-4
+				img.img-circle(src='images/clusters.png', alt='Clustering image', width='80', height='80')            
+				h2 Clusters
+				p.lead Organizes a population of records based on similarity, or difference to each other.
+				p.text-muted
+					big Grouping a set of objects in such a way that objects in the same group are more similar (in some sense or another) to each other than to those in other groups.
+
+			.col-lg-4
+				img.img-circle(src='images/prediction.png', alt='Prediction image', width='80', height='80')            
+				h2 Prediction             
+				p.lead Identify and build prediction models from your data.
+				big
+					ul
+						li.text-muted Using x% of historical data (sample) to calibrate a prediction model to be used on future examples.
+						li.text-muted The training process ingests historical data, attempts to predict the outcome of a “holdout” data set and records the accuracy of the predictions.
+						li.text-muted The process continues until ThingWorx ML can no longer improve the “error” rate in its predictions.
+						li.text-muted The result is a model ready for scoring records that ThingWorx ML has not “seen before”.
+						li.text-muted You only need to retrain a model when the data has changed meaningfully from a content perspective.
+
+			.col-lg-4
+				img.img-circle(src='images/scoring.png', alt='Scoring  image', width='80', height='80')            
+				h2 Scoring            
+				p.lead Make a prediction.
+				p.text-muted
+					big The accuracy of the score will likely be a direct reflection of the error rate produced by the Trained Model
+				p.text-muted
+					big You do not need to retrain a model when you score records. This can be a very fast and even real time process.

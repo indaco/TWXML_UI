@@ -1,0 +1,79 @@
+br
+br
+form#signalsform.form-horizontal
+  fieldset
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='signals_ds_name_input') Data Set name
+      .col-md-6
+        input#signals_ds_name_input.form-control.input-md(type="text", name="signals_ds_name_input", disabled='disabled')
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='signals_ds_goal_input') Goal
+      .col-md-6
+        select#signals_ds_goal_select.form-control(name='Goal')
+        //input#signals_ds_goal_input.form-control.input-md(type="text", name="signals_ds_goal_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='signals_goal_desc_input') Description
+      .col-md-6
+        input#signals_goal_desc_input.form-control.input-md(type="text", name="signals_goal_desc_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='signals_max_input') Max at a time
+      .col-md-6
+        input#signals_max_input.form-control.input-md(type="text", name="signals_max_input", value=2, data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom", data-content="An integer which indicates how many features ThingWorx ML will analyze in combination when seeking predictive strength. Minimum acceptable value is 1. Default = 2")
+        //span.help-block An integer which indicates how many features ThingWorx ML will analyze in combination when seeking predictive strength. Minimum acceptable value is 1. Default = 2
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='signals-btn')
+      .col-md-6
+        button#signals-btn.btn.btn-success(type="submit") Submit
+output#signals_status_response
+.container-fluid
+  .row
+    .col-md-6
+      #accordion.panel-group
+        #panel5.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseFive', href='#collapseFive') Server Response
+          #collapseFive.panel-collapse.collapse
+            .panel-body
+              pre
+                code#signals_content
+    .col-md-6
+      #accordion.panel-group
+        #panel6.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseSix', href='#collapseSix') Job Status
+          #collapseSix.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='signals_job_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#signals_job_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_signals_status_btn.btn.btn-success(type='button') Get Job Status
+              pre
+                code#get_signals_content_status
+  .row
+    .col-md-12
+      #accordion.panel-group
+        #panel7.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseSeven', href='#collapseSeven') Signals Results
+          #collapseSeven.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='signals_results_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#signals_results_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_signals_results_btn.btn.btn-success(type='button') Get Results
+              pre
+                code#signals_results_content
