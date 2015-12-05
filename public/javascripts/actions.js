@@ -27,7 +27,7 @@ function setDSGoalsSelectField(goals) {
 }
 
 function drawRow(rowData) {
-  var row = $("<tr />")
+  var row = $("<tr />");
   $("#dataSetTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
   row.append($('<td class="dsname">' + rowData.name + '</td>'));
   row.append($('<td>' + rowData.description + '</td>'));
@@ -46,7 +46,7 @@ $(document).ready(function() {
   var twxml_module = TWXMLModule;
   var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
   $(function() {
-    $('[data-toggle="popover"]').popover()
+    $('[data-toggle="popover"]').popover();
   });
 
   function populateDatasetGoals(h, url) {
@@ -66,7 +66,13 @@ $(document).ready(function() {
   /* GET DATA SET LIST */
   /*********************/
   function getDataSetList(handleData) {
+    $.get('/dataset_list', function(data) {
+      handleData(data);
+    }).fail(function(xhr, status, error) {
+      twxml_module.showErrorMessage('#create-status-response', xhr);
+    });/*
     var _url = twxml_module.buildURL("/datasets/");
+
     twxml_module.doGET(
       headers,
       _url,
@@ -76,12 +82,12 @@ $(document).ready(function() {
       function(xhr, status, error) {
         twxml_module.showErrorMessage('#create-status-response', xhr);
       }
-    );
+    );*/
   }
 
   getDataSetList(function(output) {
     for (i = 0; i < output.length; i++) {
-      drawRow(output[i], i)
+      drawRow(output[i], i);
     }
     countDataSets();
   });
@@ -92,19 +98,11 @@ $(document).ready(function() {
   /*****************/
   $('#checkVersionBtn').click(function(event) {
     event.preventDefault();
-
-    var _url = twxml_module.buildURL("/about/versioninfo");
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(data) {
-        //$("#responseVersionArea").addClass('alert alert-success').html("<h4>You are using ThingWorx ML revision: <b>" + data.implementationVersion + "</b></h4>");
-        alert("You are using ThingWorx ML revision: " + data.implementationVersion);
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#responseVersionArea', xhr);
-      }
-    );
+    $.get('/version', function(data) {
+      alert("You are using ThingWorx ML revision: " + data.implementationVersion);
+    }).fail( function(xhr, status, error) {
+        console.log(xhr);
+    });
   });
 
 
@@ -168,7 +166,7 @@ $(document).ready(function() {
   /*******************/
   $('#dataSetTable').on('click', '.btn.btn-danger.btnDelete', function(event) {
     var answer = confirm("Do you wish to delete this data set?");
-    if (answer == true) {
+    if (answer === true) {
       event.preventDefault();
       var parent = $(this).parent("td").parent("tr");
       var _dsName = $(this).closest("tr").find(".dsname").text();
@@ -218,7 +216,7 @@ $(document).ready(function() {
         JSON.parse(evt.target.result),
         function(json, textStatus, xhr) {
           $('#config-status-response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-          $('#json-content').html(JSONPrinter.json.prettyPrint(json));;
+          $('#json-content').html(JSONPrinter.json.prettyPrint(json));
           populateDatasetGoals(headers, _url);
         },
         function(xhr, status, error) {
