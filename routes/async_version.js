@@ -1,23 +1,23 @@
-var express = require('express');
-var router = express.Router();
-var request = require('request');
+var express = require('express'),
+    router = express.Router(),
+    unirest = require('unirest'),
+    utils = require('../utils.js');
 
 /* Get TWXML version info */
 router.get('/', function(req, res) {
-  var options = req.app.get('neuron_configs');
-  options.url = options.url + "/about/versioninfo";
-  request(options, function(error, response, body) {
-    //Check for error
-    if(error){
-        return console.log('Error:', error);
+  var _configs = req.app.locals.neuron_config;
+  var options = {
+    url: utils.buildURL(_configs, "/about/versioninfo"),
+    headers: req.app.locals.neuron_header
+  };
+
+  unirest.get(options.url)
+  .headers(options.headers)
+  .end(function(response) {
+    if (response.error) {
+      res.send({"statusCode": response.status, "error": response.error});
     }
-    //Check for right status code
-    if(response.statusCode !== 200){
-        return console.log('Invalid Status Code Returned:', response.statusCode);
-    }
-    //All is good. Print the body
-    console.log(body);
-    res.send(JSON.parse(body)); // Show the HTML for the Modulus homepage.
+    res.send(response.body);
   });
 });
 
