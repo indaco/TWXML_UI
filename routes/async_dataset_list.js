@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 
-/* Get TWXML version info */
+/* Get a list of existing datasets  */
 router.get('/', function(req, res) {
   var options = req.app.get('neuron_configs');
   options.url = options.url + "/datasets/";
