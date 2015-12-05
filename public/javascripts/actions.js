@@ -65,32 +65,18 @@ $(document).ready(function() {
   /*********************/
   /* GET DATA SET LIST */
   /*********************/
-  function getDataSetList(handleData) {
+  function getDataSetList() {
     $.get('/dataset_list', function(data) {
-      handleData(data);
+      for (i = 0; i < data.length; i++) {
+        drawRow(data[i], i);
+      }
+      countDataSets();
     }).fail(function(xhr, status, error) {
       twxml_module.showErrorMessage('#create-status-response', xhr);
-    });/*
-    var _url = twxml_module.buildURL("/datasets/");
-
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(data, textStatus, xhr) {
-        handleData(data);
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );*/
+      //console.log(xhr);
+    });
   }
-
-  getDataSetList(function(output) {
-    for (i = 0; i < output.length; i++) {
-      drawRow(output[i], i);
-    }
-    countDataSets();
-  });
+  getDataSetList();
 
 
   /*****************/
@@ -101,7 +87,8 @@ $(document).ready(function() {
     $.get('/version', function(data) {
       alert("You are using ThingWorx ML revision: " + data.implementationVersion);
     }).fail( function(xhr, status, error) {
-        console.log(xhr);
+        twxml_module.showErrorMessage('#create-status-response', xhr);
+        //console.log(xhr);
     });
   });
 

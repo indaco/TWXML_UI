@@ -1,20 +1,26 @@
 // Required NodeJS modules
 // ------------------------------------------------
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var config = require('config');
-var helmet = require('helmet');
+var express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    bodyParser = require('body-parser'),
+    config = require('config'),
+    helmet = require('helmet'),
+    cors = require('cors');
 
-// Routes setup
+// Routes setup pages
 // ------------------------------------------------
-var home_page = require('./routes/index');
-var learn_page = require('./routes/learn');
-var actions_page = require('./routes/actions');
-var glossary_page = require('./routes/glossary');
+var home_page = require('./routes/index'),
+    learn_page = require('./routes/learn'),
+    actions_page = require('./routes/actions'),
+    glossary_page = require('./routes/glossary');
+
+
+// Async Routes setup
+// ------------------------------------------------
+var async_version = require('./routes/async_version'),
+    async_dataset_list = require('./routes/async_dataset_list');
 var app = express();
 
 // view engine setup
@@ -28,9 +34,20 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(helmet());
+app.use(cors());
 app.use(express.static(path.join(__dirname, '/public')));
+
+var neuron_configs = {
+    url: config.protocol + '://' + config.host + ":" + config.port + "/1.0",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'neuron-application-id': config.neuron_app_id
+    }
+};
+
+app.set('neuron_configs', neuron_configs);
 
 // App Locals
 // ------------------------------------------------
@@ -42,11 +59,14 @@ app.locals.config = {
   neuron_app_id: config.get('neuron_app_id')
 };
 
+// Pages Routes
 app.use('/', home_page);
 app.use('/learn', learn_page);
 app.use('/actions', actions_page);
 app.use('/glossary', glossary_page);
-
+// Async Routes
+app.use('/version', async_version);
+app.use('/dataset_list', async_dataset_list);
 
 // Error handlers
 // ------------------------------------------------
