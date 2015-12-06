@@ -21,7 +21,8 @@ var home_page = require('./routes/index'),
 // ------------------------------------------------
 var async_version = require('./routes/async_version'),
     async_dataset_list = require('./routes/async_dataset_list'),
-    async_create_dataset = require('./routes/async_create_dataset');
+    async_create_dataset = require('./routes/async_create_dataset'),
+    async_delete_dataset = require('./routes/async_delete_dataset');
 var app = express();
 
 // view engine setup
@@ -63,6 +64,7 @@ app.use('/glossary', glossary_page);
 app.use('/version', async_version);
 app.use('/dataset_list', async_dataset_list);
 app.use('/create_dataset', async_create_dataset);
+app.use('/delete_dataset', async_delete_dataset);
 
 // Error handlers
 // ------------------------------------------------
