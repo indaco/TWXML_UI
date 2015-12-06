@@ -148,26 +148,25 @@ $(document).ready(function() {
       event.preventDefault();
       var parent = $(this).parent("td").parent("tr");
       var _dsName = $(this).closest("tr").find(".dsname").text();
-      var _url = twxml_module.buildURL("/datasets/" + _dsName);
-      twxml_module.doDELETE(
-        headers,
-        _url,
-        function() {
+      $.ajax({
+        type: 'DELETE',
+        url: '/delete_dataset',
+        data: {"dsName": _dsName},
+        beforeSend: function() {
           parent.animate({
             'background-color': '#fb6c6c'
           }, 300);
         },
-        function() {
+        success: function() {
           parent.fadeOut(300, function() {
             parent.remove();
           });
         },
-        function(xhr, status, error) {
+        error: function(xhr, status, error) {
           twxml_module.showErrorMessage('#create-status-response', xhr);
         }
-      );
+      });
     }
-
   });
 
 
