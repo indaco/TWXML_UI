@@ -5,8 +5,8 @@ buildURL = function(config, path) {
 
 handleServerError = function(data) {
   return {
-    "errorId": data.responseText.errorId,
-    "errorMessage": data.responseText.errorMessage
+    "errorId": data.body.errorId,
+    "errorMessage": data.body.errorMessage
   };
 }
 

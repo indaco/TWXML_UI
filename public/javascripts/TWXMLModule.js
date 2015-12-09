@@ -47,7 +47,9 @@ var TWXMLModule = library( function () {
     },
 
     buildURL: function(path) {
-      return CONFIGS.protocol + "://" + CONFIGS.host + ":" + CONFIGS.port + "/1.0" + path;
+      var _ssl = (_ssl == CONFIGS.ssl);
+      var protocol = (_ssl) ? "https" : "http";
+      return protocol + "://" + CONFIGS.host + ":" + CONFIGS.port + "/1.0" + path;
     },
 
     showServerResponse: function(element, json) {
@@ -57,6 +59,12 @@ var TWXMLModule = library( function () {
     showErrorMessage: function(element, xhr) {
       var msg = _buildErrorMessage(xhr);
       $(element).html(_buildErrorMessage(xhr));
+    },
+
+    showServerErrorMessage: function(element, data) {
+      var msg = "<div class='alert alert-danger'> " +
+      "<p>Error: <b>" + JSON.parse(data.responseText).errorMessage + "</b> ( ID: " + JSON.parse(data.responseText).errorId + " )</p></div>";
+      $(element).html(msg);
     },
 
     getFileInfo: function (files) {

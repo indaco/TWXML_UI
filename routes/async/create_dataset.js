@@ -18,7 +18,8 @@ router.post('/', function(req, res) {
   .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.send({"statusCode": response.status, "error": response.error});
+      res.status(400).send(utils.handleServerError(response));
+      return;
     }
     res.send(response.body);
   });

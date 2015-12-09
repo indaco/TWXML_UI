@@ -44,7 +44,7 @@ function countDataSets() {
 
 $(document).ready(function() {
   var twxml_module = TWXMLModule;
-  //var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
+  var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
   $(function() {
     $('[data-toggle="popover"]').popover();
   });
@@ -71,8 +71,8 @@ $(document).ready(function() {
         drawRow(data[i], i);
       }
       countDataSets();
-    }).fail(function(xhr, status, error) {
-      twxml_module.showErrorMessage('#create-status-response', xhr);
+    }).fail(function(data) {
+      twxml_module.showServerErrorMessage('#create-status-response', data);
     });
   }
   getDataSetList();
@@ -85,8 +85,8 @@ $(document).ready(function() {
     event.preventDefault();
     $.get('/version', function(data) {
       alert("You are using ThingWorx ML revision: " + data.implementationVersion);
-    }).fail( function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
+    }).fail( function(data) {
+        twxml_module.showServerErrorMessage('#create-status-response', data);
         //console.log(xhr);
     });
   });
@@ -110,8 +110,8 @@ $(document).ready(function() {
       $('#create-content').html(JSONPrinter.json.prettyPrint(data));
       drawRow(data);
       countDataSets();
-    }).fail(function(xhr, status, error) {
-      twxml_module.showErrorMessage('#create-status-response', xhr);
+    }).fail(function(data) {
+      twxml_module.showServerErrorMessage('#create-status-response', data);
     });
   });
 

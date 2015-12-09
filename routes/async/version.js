@@ -16,7 +16,8 @@ router.get('/', function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.send({"statusCode": response.status, "error": response.error});
+      res.status(400).send(utils.handleServerError(response));
+      return;
     }
     res.send(response.body);
   });
