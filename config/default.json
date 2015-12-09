@@ -1,7 +1,7 @@
 {
-  "protocol": "http",
   "host": "10.199.70.146",
   "port": "8080",
   "ssl": false,
-  "neuron_app_id": "neuronuser"
+  "neuron_app_id": "neuronuser",
+  "neuron_app_key": "neuronuser"
 }
