@@ -64,6 +64,7 @@ var TWXMLModule = library( function () {
     showServerErrorMessage: function(element, data) {
       var msg = "<div class='alert alert-danger'> " +
       "<p>Error: <b>" + JSON.parse(data.responseText).errorMessage + "</b> ( ID: " + JSON.parse(data.responseText).errorId + " )</p></div>";
+      $(element).show();
       $(element).html(msg);
     },
 

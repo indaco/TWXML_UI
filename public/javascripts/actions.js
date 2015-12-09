@@ -33,7 +33,6 @@ function drawRow(rowData) {
   row.append($('<td>' + rowData.description + '</td>'));
   row.append($('<td>' + rowData.optimized + '</td>'));
   row.append($("<td><button class='btn btn-primary btnUseIt' aria-label='Left Align'><span class='glyphicon glyphicon-pencil' aria-hidden='true'/> Use it</button> <button class='btn btn-danger btnDelete' aria-label='Left Align'><span class='glyphicon glyphicon-trash' aria-hidden='true'/> Delete</button></td>"));
-  //row.append($('<td><button class="btnDelete">Delete</button></td>'));
 }
 
 function countDataSets() {
@@ -87,7 +86,6 @@ $(document).ready(function() {
       alert("You are using ThingWorx ML revision: " + data.implementationVersion);
     }).fail( function(data) {
         twxml_module.showServerErrorMessage('#create-status-response', data);
-        //console.log(xhr);
     });
   });
 
@@ -110,6 +108,8 @@ $(document).ready(function() {
       $('#create-content').html(JSONPrinter.json.prettyPrint(data));
       drawRow(data);
       countDataSets();
+      $('#create-status-response').html("");
+      $('#create-status-response').hide();
     }).fail(function(data) {
       twxml_module.showServerErrorMessage('#create-status-response', data);
     });
@@ -161,6 +161,7 @@ $(document).ready(function() {
           parent.fadeOut(300, function() {
             parent.remove();
           });
+
         },
         error: function(xhr, status, error) {
           twxml_module.showErrorMessage('#create-status-response', xhr);
@@ -198,7 +199,6 @@ $(document).ready(function() {
         },
         function(xhr, status, error) {
           twxml_module.showServerResponse('#create-content', xhr);
-          //$('#create-content').html("<div class='alert alert-danger'><h4>Error creating data set " + error.message + "reading file</h4></div>");
         }
       );
     };
@@ -283,7 +283,6 @@ $(document).ready(function() {
       },
       function(xhr, status, error) {
         twxml_module.showErrorMessage('#signals_status_response', xhr);
-        //showErrorMessage('#signals_status_response', xhr);
       }
     );
   });
