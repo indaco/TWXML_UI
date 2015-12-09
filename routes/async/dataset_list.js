@@ -1,7 +1,8 @@
 var express = require('express'),
     router = express.Router(),
     unirest = require('unirest'),
-    utils = require('../utils.js');
+    path = require('path'),
+    utils = require(path.join(__dirname, '..','..', 'utils.js'));
 
 /* Get a list of existing datasets  */
 router.get('/', function(req, res) {

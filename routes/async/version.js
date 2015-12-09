@@ -1,7 +1,8 @@
 var express = require('express'),
     router = express.Router(),
     unirest = require('unirest'),
-    utils = require('../utils.js');
+    path = require('path'),
+    utils = require(path.join(__dirname, '..', '..', '/utils.js'));
 
 /* Get TWXML version info */
 router.get('/', function(req, res) {
