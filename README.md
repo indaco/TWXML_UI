@@ -32,6 +32,20 @@ Further information are available on the [Official ThingWorx Web Site](http://ww
   - `bin/start.sh` for Linux or OSX users
 6. Open a browser window and visit [http://localhost:3000](http://localhost:3000)
 
+### Miscellaneous
+- Run the NeuronSolo VM and log-in
+- Install prerequisites typing `sudo yum install gcc gcc-c++ make`
+- Download and install NodeJS from sources in order to use the latest version:
+```
+[vagrant@neuron ]$ wget https://nodejs.org/dist/v5.2.0/node-v5.2.0.tar.gz`
+[vagrant@neuron ]$ tar xvzf node-v5.2.0.tar.gz
+[vagrant@neuron ]$ cd node-v5.2.0
+[vagrant@neuron ]$ ./configure
+[vagrant@neuron ]$ make
+[vagrant@neuron ]$ make install
+```
+- Check the installation `node --version` and `npm --version`
+
 ### Contributing
 If you are interested in more features or in fixing something and you havee experience with Javascript and ExpressJS, feel free to contribute.
 
