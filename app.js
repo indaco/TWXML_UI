@@ -23,6 +23,7 @@ var home_page     = require('./routes/index'),
 var async_version             = require('./routes/async/version'),
     async_dataset_list        = require('./routes/async/dataset_list'),
     async_create_dataset      = require('./routes/async/create_dataset'),
+    async_use_dataset         = require('./routes/async/use_dataset'),
     async_delete_dataset      = require('./routes/async/delete_dataset'),
     async_submit_signals      = require('./routes/async/submit_signals'),
     async_submit_profiles     = require('./routes/async/submit_profiles'),
@@ -64,6 +65,9 @@ app.locals.neuron_header = {
   'neuron-application-id': config.neuron_app_id,
   'neuron-application-key': config.neuron_app_key
 };
+app.locals.dataset = {
+  'dsName': ""
+};
 
 // Sync Pages Routes
 // ------------------------------------------------
@@ -77,6 +81,7 @@ app.use('/glossary', glossary_page);
 app.use('/version', async_version);
 app.use('/dataset_list', async_dataset_list);
 app.use('/create_dataset', async_create_dataset);
+app.use('/use_dataset', async_use_dataset);
 app.use('/delete_dataset', async_delete_dataset);
 app.use('/submit_signals', async_submit_signals);
 app.use('/submit_profiles', async_submit_profiles);

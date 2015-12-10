@@ -120,23 +120,16 @@ $(document).ready(function() {
   /*******************/
   $('#dataSetTable').on('click', '.btn.btn-primary.btnUseIt', function(event) {
     event.preventDefault();
-    //var parent = $(this).parent("td").parent("tr");
+    var parent = $(this).parent("td").parent("tr");
     var _dsName = $(this).closest("tr").find(".dsname").text();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/configuration");
-    var opts = [];
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(json, textStatus, xhr) {
-        setDSInputFields(_dsName);
-        setDSGoalsSelectField(twxml_module.retrieveGoals(json));
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );
+  
+    $.get('/use_dataset', {dsName : _dsName}, function(data) {
+      setDSInputFields(_dsName);
+      setDSGoalsSelectField(twxml_module.retrieveGoals(data));
+    }).fail(function(data) {
+      twxml_module.showServerErrorMessage('#create-status-response', data);
+    });
   });
-
 
 
   /*******************/
