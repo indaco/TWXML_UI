@@ -9,7 +9,12 @@ function library( module ){
 }
 
 var TWXMLModule = library( function () {
-  var jsonPrinter, _buildHeaders, _buildErrorMessage, _buildServerResponse, _countFeatures;
+  var jsonPrinter,
+      _buildHeaders,
+      _buildErrorMessage,
+      _buildServerErrorMessage,
+      _buildServerResponse,
+      _countFeatures;
 
   // A private variables:
   jsonPrinter = JSONPrinter.json;
@@ -27,6 +32,13 @@ var TWXMLModule = library( function () {
 
   _buildErrorMessage = function(xhr) {
     return "<div class='alert alert-danger'>Error: <b>" + JSON.parse(xhr.responseText).errorMessage + "</b></div>";
+  };
+
+  _buildServerErrorMessage = function(data) {
+    var msg = "<div class='alert alert-danger'> " +
+    "<p>Error: <b>" + JSON.parse(data.responseText).errorMessage +
+    "</b> ( ID: " + JSON.parse(data.responseText).errorId + " )</p></div>";
+    return msg;
   };
 
   _buildServerResponse = function(json) {
@@ -62,10 +74,8 @@ var TWXMLModule = library( function () {
     },
 
     showServerErrorMessage: function(element, data) {
-      var msg = "<div class='alert alert-danger'> " +
-      "<p>Error: <b>" + JSON.parse(data.responseText).errorMessage + "</b> ( ID: " + JSON.parse(data.responseText).errorId + " )</p></div>";
+      $(element).html(_buildServerErrorMessage(data));
       $(element).show();
-      $(element).html(msg);
     },
 
     getFileInfo: function (files) {
@@ -108,12 +118,12 @@ var TWXMLModule = library( function () {
           $(content_element).html(JSONPrinter.json.prettyPrint(json_response));
         },
         function(xhr, status, error) {
-          $(element).html(_buildErrorMessage(xhr));
+          $(status_element).html(_buildErrorMessage(xhr));
         }
       );
     },
 
-    getJobStatus: function (event, input_element, content_element, status_element) {
+    /*getJobStatus: function (event, input_element, content_element, status_element) {
       event.preventDefault();
       //job_id_value = $(input_element).val();
       var _jobIDValue = $(input_element).val();
@@ -125,9 +135,19 @@ var TWXMLModule = library( function () {
           $(content_element).html(JSONPrinter.json.prettyPrint(json_response));
         },
         function(xhr, status, error) {
-          $(element).html(_buildErrorMessage(xhr));
+          $(status_element).html(_buildErrorMessage(xhr));
         }
       );
+    },*/
+
+    getJobStatus: function (event, params, content_element, status_element) {
+      event.preventDefault();
+      $.get('/job_status', params, function(data) {
+        $(content_element).html(JSONPrinter.json.prettyPrint(data));
+      }).fail(function(data) {
+        $(status_element).html(_buildServerErrorMessage(data));
+        $(status_element).show();
+      });
     },
 
     doGET: function(header, url, successFunc, errorFunc) {

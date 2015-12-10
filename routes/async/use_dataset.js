@@ -4,13 +4,13 @@ var express = require('express'),
     path = require('path'),
     utils = require(path.join(__dirname, '..','..', 'utils.js'));
 
-/* Get a list of existing datasets  */
+/* Use an existing dataset  */
 router.get('/', function(req, res) {
   var _dsName = req.query.dsName;
   var _configs = req.app.locals.neuron_config;
   var options = {
     url: utils.buildURL(_configs, "/datasets/" + _dsName + "/configuration" ),
-    headers: req.app.locals.neuron_header
+    headers: req.app.locals.neuron_headers
   };
   unirest.get(options.url)
   .headers(options.headers)
@@ -19,7 +19,6 @@ router.get('/', function(req, res) {
       res.status(400).send(utils.handleServerError(response));
       return;
     }
-    req.app.locals.dataset.dsName = _dsName;
     res.send(response.body);
   });
 });

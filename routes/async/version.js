@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
   var _configs = req.app.locals.neuron_config;
   var options = {
     url: utils.buildURL(_configs, "/about/versioninfo"),
-    headers: req.app.locals.neuron_header
+    headers: req.app.locals.neuron_headers
   };
 
   unirest.get(options.url)
@@ -22,6 +22,5 @@ router.get('/', function(req, res) {
     res.send(response.body);
   });
 });
-
 
 module.exports = router;

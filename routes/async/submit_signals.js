@@ -6,7 +6,8 @@ var express = require('express'),
 
 /* Submit Signals */
 router.post('/', function(req, res) {
-  var _dsName = req.app.locals.dataset.name;
+  var _dsName = req.body.dsName;
+  delete req.body.dsName; // removing dsName from the body params
   var _configs = req.app.locals.neuron_config;
   var options = {
     url: utils.buildURL(_configs, "/datasets/" + _dsName + "/signals"),

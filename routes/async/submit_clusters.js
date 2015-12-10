@@ -6,14 +6,17 @@ var express = require('express'),
 
 /* Submit Clusters */
 router.post('/', function(req, res) {
-  var _dsName = req.app.locals.dataset.name;
+  var _dsName = req.body.dsName;
+  delete req.body.dsName; // removing dsName from the body params
+  req.body.hierarchy = new Array(req.body.hierarchy); // put value in an Array
+
   var _configs = req.app.locals.neuron_config;
   var options = {
     url: utils.buildURL(_configs, "/datasets/" + _dsName + "/clusters"),
     headers: req.app.locals.neuron_headers,
     body: JSON.stringify(req.body)
   };
-
+  
   unirest.post(options.url)
   .headers(options.headers)
   .send(options.body)

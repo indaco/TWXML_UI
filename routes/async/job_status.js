@@ -4,16 +4,14 @@ var express = require('express'),
     path = require('path'),
     utils = require(path.join(__dirname, '..','..', 'utils.js'));
 
-/* Get a list of existing datasets  */
+/* Get status for a submitted job  */
 router.get('/', function(req, res) {
-  var _dsName = req.app.locals.dataset.name;
   var _jobID = req.query.jobID;
   var _configs = req.app.locals.neuron_config;
   var options = {
-    url: utils.buildURL(_configs, "/datasets/" + _dsName + "/status/" + _jobID),
+    url: utils.buildURL(_configs, "/status/" + _jobID),
     headers: req.app.locals.neuron_headers
   };
-
   unirest.get(options.url)
   .headers(options.headers)
   .end(function(response) {

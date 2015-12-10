@@ -4,7 +4,7 @@ var express = require('express'),
     path = require('path'),
     utils = require(path.join(__dirname, '..','..', 'utils.js'));
 
-/* Get a list of existing datasets  */
+/* Get a list of objectives for an existing datasets  */
 router.get('/', function(req, res) {
   var _dsName = req.query.dsName;
   var _configs = req.app.locals.neuron_config;

@@ -7,7 +7,7 @@ var express = require('express'),
     bodyParser  = require('body-parser'),
     config      = require('config'),
     helmet      = require('helmet'),
-    cors        = require('cors')
+    cors        = require('cors'),
     version     = require('./version');
 
 // Routes setup pages
@@ -29,7 +29,8 @@ var async_version             = require('./routes/async/version'),
     async_submit_profiles     = require('./routes/async/submit_profiles'),
     async_submit_clusters     = require('./routes/async/submit_clusters'),
     async_submit_predictions  = require('./routes/async/submit_predictions'),
-    async_job_status          = require('./routes/async/job_status');
+    async_job_status          = require('./routes/async/job_status'),
+    async_job_results         = require('./routes/async/job_results');
 
 // Express initialization
 // ------------------------------------------------
@@ -59,14 +60,11 @@ app.locals.neuron_config = {
   neuron_app_id: config.get('neuron_app_id'),
   neuron_app_key: config.get('neuron_app_key')
 };
-app.locals.neuron_header = {
+app.locals.neuron_headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
   'neuron-application-id': config.neuron_app_id,
   'neuron-application-key': config.neuron_app_key
-};
-app.locals.dataset = {
-  'dsName': ""
 };
 
 // Sync Pages Routes
@@ -87,6 +85,8 @@ app.use('/submit_signals', async_submit_signals);
 app.use('/submit_profiles', async_submit_profiles);
 app.use('/submit_clusters', async_submit_clusters);
 app.use('/submit_predictions', async_submit_predictions);
+app.use('/job_status', async_job_status);
+app.use('/job_results', async_job_results);
 
 // Error handlers
 // ------------------------------------------------

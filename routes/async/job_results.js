@@ -4,21 +4,19 @@ var express = require('express'),
     path = require('path'),
     utils = require(path.join(__dirname, '..','..', 'utils.js'));
 
-/* Create a new Dataset */
-router.post('/', function(req, res) {
+/* Get results for a submitted job  */
+router.get('/', function(req, res) {
   var _configs = req.app.locals.neuron_config;
   var options = {
-    url: utils.buildURL(_configs, "/datasets/"),
-    headers: req.app.locals.neuron_headers,
-    body: JSON.stringify(req.body)
+    url: utils.buildURL(_configs, utils.getJobResultsURLByJobType(req.query)),
+    headers: req.app.locals.neuron_headers
   };
-
-  unirest.post(options.url)
+  console.log(options);
+  unirest.get(options.url)
   .headers(options.headers)
-  .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.status(400).send(utils.handleServerError(response));
+      res.status(400).send(utils.handleErrorMessage(response));
       return;
     }
     res.send(response.body);

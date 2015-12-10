@@ -4,7 +4,7 @@ var express = require('express'),
     path = require('path'),
     utils = require(path.join(__dirname, '..','..', 'utils.js'));
 
-/* Create a new Dataset */
+/* Configure an existing dataset */
 router.post('/', function(req, res) {
   var _dsName = req.app.locals.dataset.name;
   var _configs = req.app.locals.neuron_config;
