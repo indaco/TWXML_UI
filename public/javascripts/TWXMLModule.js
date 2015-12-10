@@ -35,9 +35,10 @@ var TWXMLModule = library( function () {
   };
 
   _buildServerErrorMessage = function(data) {
+    console.log(data);
     var msg = "<div class='alert alert-danger'> " +
-    "<p>Error: <b>" + JSON.parse(data.responseText).errorMessage +
-    "</b> ( ID: " + JSON.parse(data.responseText).errorId + " )</p></div>";
+    "<p>Error: <b>" + data.body.errorMessage +
+    "</b> ( ID: " + data.body.errorId + " )</p></div>";
     return msg;
   };
 
@@ -78,17 +79,6 @@ var TWXMLModule = library( function () {
       $(element).show();
     },
 
-    getFileInfo: function (files) {
-      var output = [];
-      // files is a FileList of File objects. List some properties.
-      for (var i = 0, f; f = files[i]; i++) {
-        output.push('<li>Filename: <strong>', escape(f.name), '</strong> (', f.type || 'n/a', ')  </li> ',
-          '<li> Dimension: ', f.size, ' bytes</li>',
-          '<li> Last modified: ', f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a', '</li>');
-      }
-      return output;
-    },
-
     retrieveGoals: function(json) {
       goals = [];
       $.each(json, function(idx, obj) {
@@ -106,40 +96,6 @@ var TWXMLModule = library( function () {
       return output;
     },
 
-    getJobResults: function (event, input_element, job_id_element, job_type, content_element, status_element) {
-      event.preventDefault();
-      var _dsName = $(input_element).val();
-      var _jobIDValue = $(job_id_element).val();
-      var _url = this.buildURL("/datasets/" + _dsName + "/" + job_type + "/" + _jobIDValue + "/results");
-      this.doGET(
-        this.getHeaders(CONFIGS.neuron_app_id),
-        _url,
-        function(json_response) {
-          $(content_element).html(JSONPrinter.json.prettyPrint(json_response));
-        },
-        function(xhr, status, error) {
-          $(status_element).html(_buildErrorMessage(xhr));
-        }
-      );
-    },
-
-    /*getJobStatus: function (event, input_element, content_element, status_element) {
-      event.preventDefault();
-      //job_id_value = $(input_element).val();
-      var _jobIDValue = $(input_element).val();
-      var _url = this.buildURL("/status/" + _jobIDValue);
-      this.doGET(
-        this.getHeaders(CONFIGS.neuron_app_id),
-        _url,
-        function(json_response) {
-          $(content_element).html(JSONPrinter.json.prettyPrint(json_response));
-        },
-        function(xhr, status, error) {
-          $(status_element).html(_buildErrorMessage(xhr));
-        }
-      );
-    },*/
-
     getJobStatus: function (event, params, content_element, status_element) {
       event.preventDefault();
       $.get('/job_status', params, function(data) {
@@ -149,6 +105,18 @@ var TWXMLModule = library( function () {
         $(status_element).show();
       });
     },
+
+    getJobResults: function (event, params, content_element, status_element) {
+      event.preventDefault();
+      $.get('/job_results', params, function(data) {
+        $(content_element).html(JSONPrinter.json.prettyPrint(data));
+      }).fail(function(data) {
+        $(status_element).html(_buildServerErrorMessage(data));
+        $(status_element).show();
+      });
+    },
+
+
 
     doGET: function(header, url, successFunc, errorFunc) {
       $.ajax({
