@@ -79,16 +79,6 @@ var TWXMLModule = library( function () {
       $(element).show();
     },
 
-    retrieveGoals: function(json) {
-      goals = [];
-      $.each(json, function(idx, obj) {
-         if(obj.objective === true) {
-           goals.push(obj.fieldName);
-         }
-       });
-       return goals;
-    },
-
     getDataSetInfo: function(json) {
       var output = [];
       output.push('<li>No. Features: <strong>' + _countFeatures(json) + '</strong></li>');

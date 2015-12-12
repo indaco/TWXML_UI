@@ -183,16 +183,16 @@ $(document).ready(function() {
         dsName: $('input[name=config_dsName_input]').val(),
         fileContent: JSON.stringify(content)
       };
-      $.post('/configure', _requestBody, function(data, textStatus, jqXHR) {
+      $.post('/configure', _requestBody, function(data) {
           if (typeof data.error === 'undefined') {
-            showSuccessCodeServerResponse('#config_status_response', textStatus);
+            showSuccessCodeServerResponse('#config_status_response', data.status);
             $('#json_content').html(JSONPrinter.json.prettyPrint(data));
             useIt(_requestBody.dsName, '#config_status_response');
           } else {
             console.log('ERRORS on Success : ' + JSON.stringify(data));
           }
-      }).fail(function(jqXHR, textStatus, errorThrown) {
-        twxml_module.showServerResponse('#json_content', xhr);
+      }).fail(function(data) {
+        twxml_module.showServerErrorMessage('#json_content', data);
       });
     };
 
@@ -296,8 +296,7 @@ $(document).ready(function() {
       dsName: $('#signals_ds_name_input').val(),
       jobID: $('#signals_results_id_input').val()
     };
-    twxml_module.getJobResults2(event, params, '#signals_results_content', '#signals_status_response');
-    //twxml_module.getJobResults(event, '#signals_ds_name_input', '#signals_results_id_input', 'signals', '#signals_results_content', '#signals_status_response');
+    twxml_module.getJobResults(event, params, '#signals_results_content', '#signals_status_response');
   });
 
   /********************/
@@ -461,19 +460,12 @@ $(document).ready(function() {
   /******************************/
   $('#get_predictions_results_btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#predictions_ds_name_input').val();
-    var _job_id_value = $('#predictions_results_id_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/clusters");
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(json) {
-        $('#predictions_results_content').html(JSONPrinter.json.prettyPrint(json));
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#predictions_status_response', xhr);
-      }
-    );
+    var params = {
+      jobType: 'predictions',
+      dsName: $('#predictions_ds_name_input').val(),
+      jobID: $('#predictions_results_id_input').val()
+    };
+    twxml_module.getJobResults(event, params, '#predictions_results_content', '#predictions_status_response');
   });
 
 });
