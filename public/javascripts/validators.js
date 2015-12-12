@@ -11,7 +11,7 @@ $(document).ready(function() {
         validating: 'glyphicon glyphicon-refresh'
       },
       fields: {
-        name: {
+        create_dsName: {
           validators: {
             notEmpty: {
               message: 'The name is required'

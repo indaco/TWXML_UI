@@ -4,9 +4,9 @@ form#createform.form-horizontal
     legend Create a New Data Set
     // Text input
     .form-group
-      label.col-md-4.control-label(for='name') Name
+      label.col-md-4.control-label(for='create_dsName') Name
       .col-md-6
-        input#name.form-control.input-md(name='name', type='text', data-toggle="popover", data-animation="true", data-trigger="focus", data-placement="bottom", data-content="The unique identifier for a data set. Cannot contain spaces. Once created, this name cannot be changed")
+        input#create_dsName.form-control.input-md(name='create_dsName', type='text', data-toggle="popover", data-animation="true", data-trigger="focus", data-placement="bottom", data-content="The unique identifier for a data set. Cannot contain spaces. Once created, this name cannot be changed")
     // Text input
     .form-group
       label.col-md-4.control-label(for='description') Description
@@ -18,7 +18,7 @@ form#createform.form-horizontal
       .col-md-4
         button#createbtn.btn.btn-success(type='submit', disabled="disabled") Create
 br
-output#create-status-response
+output#create_status_response
 #accordion.panel-group
   #panel1.panel.panel-default
     .panel-heading
@@ -27,4 +27,4 @@ output#create-status-response
     #collapseOne.panel-collapse.collapse
       .panel-body
         pre
-          code#create-content
+          code#create_content

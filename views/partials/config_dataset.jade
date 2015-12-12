@@ -4,16 +4,16 @@ form#configdsform.form-horizontal
   fieldset
     // Text input
     .form-group
-      label.col-md-4.control-label(for='config-dataset-name-input') Data Set name
+      label.col-md-4.control-label(for='config_dsName_input') Dataset name
       .col-md-6
-        input#config-dataset-name-input.form-control.input-md(type="input", disabled='disabled')
+        input#config_dsName_input.form-control.input-md(type="input", disabled='disabled', name="config_dsName_input")
     // Text input
     .form-group
       label.col-md-4.control-label(for='') JSON File for the Data Set Configuration
       .col-md-6
-        input#input-json-file.btn-primary(type="file")
-output#json-list
-output#config-status-response
+        input#input_json_file.btn-primary(type="file")
+output#json_list
+output#config_status_response
 #accordion.panel-group
   #panel2.panel.panel-default
     .panel-heading
@@ -22,4 +22,4 @@ output#config-status-response
     #collapseTwo.panel-collapse.collapse
       .panel-body
         pre
-          code#json-content
+          code#json_content

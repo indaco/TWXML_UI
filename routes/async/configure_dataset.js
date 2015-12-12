@@ -6,24 +6,22 @@ var express = require('express'),
 
 /* Configure an existing dataset */
 router.post('/', function(req, res) {
-  var _dsName = req.app.locals.dataset.name;
   var _configs = req.app.locals.neuron_config;
 
   var options = {
-    url: utils.buildURL(_configs, "/datasets/" + _dsName + "/configuration"),
+    url: utils.buildURL(_configs, "/datasets/" + req.body.dsName  + "/configuration"),
     headers: req.app.locals.neuron_headers,
-    body: req.body
+    body: req.body.fileContent
   };
   unirest.post(options.url)
   .headers(options.headers)
-  .type('json')
   .send(options.body)
-  .end(function(response) {
+  .end(function (response) {
     if (response.error) {
       res.status(400).send(utils.handleErrorMessage(response));
       return;
     }
-    res.send(response.body);
+    res.status(200).send(response.body);
   });
 });
 
