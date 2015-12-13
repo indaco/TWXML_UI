@@ -32,17 +32,7 @@ form#signalsform.form-horizontal
 output#signals_status_response
 .container-fluid
   .row
-    .col-md-6
-      #accordion.panel-group
-        #panel5.panel.panel-default
-          .panel-heading
-            h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseFive', href='#collapseFive') Server Response
-          #collapseFive.panel-collapse.collapse
-            .panel-body
-              pre
-                code#signals_content
-    .col-md-6
+    .col-md-12
       #accordion.panel-group
         #panel6.panel.panel-default
           .panel-heading
@@ -58,7 +48,7 @@ output#signals_status_response
                     input#signals_job_id_input.form-control(type="text", placeholder="Job ID")
                   button#get_signals_status_btn.btn.btn-success(type='button') Get Job Status
               pre
-                code#get_signals_content_status
+                code#signals_content
   .row
     .col-md-12
       #accordion.panel-group

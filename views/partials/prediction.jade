@@ -65,17 +65,7 @@ form#predictionsform.form-horizontal
 output#predictions_status_response
 .container-fluid
   .row
-    .col-md-6
-      #accordion.panel-group
-        #panel14.panel.panel-default
-          .panel-heading
-            h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseFourteen', href='#collapseFourteen') Server Response
-          #collapseFourteen.panel-collapse.collapse
-            .panel-body
-              pre
-                code#predictions_content
-    .col-md-6
+    .col-md-12
       #accordion.panel-group
         #panel15.panel.panel-default
           .panel-heading
@@ -91,7 +81,7 @@ output#predictions_status_response
                     input#predictions_job_id_input.form-control(type="text", placeholder="Job ID")
                   button#get_predictions_status_btn.btn.btn-success(type='button') Get Job Status
               pre
-                code#get_predictions_content_status
+                code#predictions_content
   .row
     .col-md-12
       #accordion.panel-group

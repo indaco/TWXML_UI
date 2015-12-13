@@ -52,17 +52,7 @@ form#profilesform.form-horizontal
 output#profiles_status_response
 .container-fluid
   .row
-    .col-md-6
-      #accordion.panel-group
-        #panel8.panel.panel-default
-          .panel-heading
-            h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseEight', href='#collapseEight') Server Response
-          #collapseEight.panel-collapse.collapse
-            .panel-body
-              pre
-                code#profiles_content
-    .col-md-6
+    .col-md-12
       #accordion.panel-group
         #panel9.panel.panel-default
           .panel-heading
@@ -78,7 +68,7 @@ output#profiles_status_response
                     input#profiles_job_id_input.form-control(type="text", placeholder="Job ID")
                   button#get_profiles_status_btn.btn.btn-success(type='button') Get Job Status
               pre
-                code#get_profiles_content_status
+                code#profiles_content
   .row
     .col-md-12
       #accordion.panel-group

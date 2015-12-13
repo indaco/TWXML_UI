@@ -5,7 +5,13 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
   alert('The File APIs are not fully supported in this browser. Try with another one, e.g. Google Chrome');
 }
 
-function setDSInputFields(ds_name) {
+function _buildURL(path) {
+  var _ssl = (_ssl == CONFIGS.ssl);
+  var protocol = (_ssl) ? "https" : "http";
+  return protocol + "://" + CONFIGS.host + ":" + CONFIGS.port + "/1.0" + path;
+}
+
+function _setDSInputFields(ds_name) {
   $('#config_dsName_input').val(ds_name);
   $('#upload_dsName_input').val(ds_name);
   $('#filters_ds_name_input').val(ds_name);
@@ -15,7 +21,7 @@ function setDSInputFields(ds_name) {
   $('#predictions_ds_name_input').val(ds_name);
 }
 
-function setDSGoalsSelectField(goals) {
+function _setDSGoalsSelectField(goals) {
   var opts = [];
   $.each(goals, function(idx, obj) {
     opts.push("<option value='" + obj + "'>" + obj + "</option>");
@@ -26,7 +32,7 @@ function setDSGoalsSelectField(goals) {
   $('#predictions_ds_goal_select').html(opts);
 }
 
-function drawRow(rowData) {
+function _drawRow(rowData) {
   var row = $("<tr />");
   $("#dataSetTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
   row.append($('<td class="dsname">' + rowData.name + '</td>'));
@@ -35,15 +41,45 @@ function drawRow(rowData) {
   row.append($("<td><button class='btn btn-primary btnUseIt' aria-label='Left Align'><span class='glyphicon glyphicon-pencil' aria-hidden='true'/> Use it</button> <button class='btn btn-danger btnDelete' aria-label='Left Align'><span class='glyphicon glyphicon-trash' aria-hidden='true'/> Delete</button></td>"));
 }
 
-function countDataSets() {
+function _clearCreationFields() {
+  $('#create_dsName').val("");
+  $('#description').val("");
+}
+
+function _countDataSets() {
   $('#rowCount').html("[ # " + ($('#dataSetTable tr').length - 1) + " ]");
 }
 
-function showSuccessCodeServerResponse(element, statusCode) {
-  $(element).html("<div class='alert alert-success'>Status Code: <b>" + statusCode + "</b></div>");
+function _showAjaxErrorMessage(element, xhr) {
+  $(element).html("<div class='alert alert-danger'>Error: <b>" + JSON.parse(xhr.responseText).errorMessage + "</b></div>");
+  $(element).show();
 }
 
-function retrieveGoals(json) {
+function _showServerResponse(element, data) {
+  $(element).html(JSONPrinter.json.prettyPrint(data));
+}
+
+function _showSuccessMessage(element, msg) {
+  $(element).html("<div class='alert alert-success'>Status: <b>" + msg + "</b></div>");
+  $(element).show();
+}
+
+function _showErrorMessage(element, data) {
+  var msg = "<div class='alert alert-danger'> " +
+    "Error: <br/><b>" + data.responseJSON.errorMessage +
+    "</b> <br/>( ID: " + data.responseJSON.errorId + " )</div>";
+  $(element).html(msg);
+  $(element).show();
+}
+
+function _getDataSetInfo(json) {
+  var output = [];
+  output.push('<li>No. Features: <strong>' + json.length + '</strong></li>');
+  output.push('<li> Goals: <strong>' + retrieveGoals(json) + '</strong></li>');
+  return output;
+}
+
+function _retrieveGoals(json) {
   goals = [];
   $.each(json, function(idx, obj) {
      if(obj.objective === true) {
@@ -53,38 +89,39 @@ function retrieveGoals(json) {
    return goals;
 }
 
+function useIt(datasetName, errorArea) {
+  $.get('/use_dataset', {dsName: datasetName}, function(data) {
+    _setDSInputFields(datasetName);
+    _setDSGoalsSelectField(_retrieveGoals(data));
+  }).fail(function(data) {
+    _showErrorMessage(errorArea, data);
+  });
+}
+
+/*********************/
+/* GET DATA SET LIST */
+/*********************/
+function getDataSetList() {
+  $.get('/dataset_list', function(data) {
+    for (i = 0; i < data.length; i++) {
+      _drawRow(data[i], i);
+    }
+    //_countDataSets();
+  }).fail(function(data) {
+    _showErrorMessage('#dsList_status_response', data);
+  });
+}
+
 
 $(document).ready(function() {
+  // TWXMLModule initialization
   var twxml_module = TWXMLModule;
-  var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
+  // inline help for input fields
   $(function() {
     $('[data-toggle="popover"]').popover();
   });
-
-  function useIt(datasetName, errorArea) {
-    $.get('/use_dataset', {dsName: datasetName}, function(data) {
-      setDSInputFields(datasetName);
-      setDSGoalsSelectField(retrieveGoals(data));
-    }).fail(function(data) {
-      twxml_module.showServerErrorMessage(errorArea, data);
-    });
-  }
-
-  /*********************/
-  /* GET DATA SET LIST */
-  /*********************/
-  function getDataSetList() {
-    $.get('/dataset_list', function(data) {
-      for (i = 0; i < data.length; i++) {
-        drawRow(data[i], i);
-      }
-      countDataSets();
-    }).fail(function(data) {
-      twxml_module.showServerErrorMessage('#dsList_status_response', data);
-    });
-  }
+  // regtrieve existing datasets
   getDataSetList();
-
 
   /*****************/
   /* CHECK VERSION */
@@ -98,7 +135,6 @@ $(document).ready(function() {
     });
   });
 
-
   /*******************/
   /* CREATE DATA SET */
   /*******************/
@@ -109,15 +145,16 @@ $(document).ready(function() {
       "description": $('#description').val()
     };
     $.post('/create_dataset', _requestBody, function(data) {
-      setDSInputFields(_requestBody.name);
-      $('#create_content').html(JSONPrinter.json.prettyPrint(data));
-      drawRow(data);
-      countDataSets();
-      $('#name').val("");
+      _setDSInputFields(_requestBody.name);
+      //$('#create_content').html(JSONPrinter.json.prettyPrint(data));
+      _showServerResponse('#create_content', data);
+      _drawRow(data);
+      //_countDataSets();
+      _clearCreationFields();
       $('#create_status_response').html("");
       $('#create_status_response').hide();
     }).fail(function(data) {
-      twxml_module.showServerErrorMessage('#create_status_response', data);
+      _showErrorMessage('#create_status_response', data);
     });
   });
 
@@ -131,7 +168,6 @@ $(document).ready(function() {
 
     useIt(_dsName, '#dsList_status_response');
   });
-
 
   /*******************/
   /* DELETE DATA SET */
@@ -155,16 +191,14 @@ $(document).ready(function() {
           parent.fadeOut(300, function() {
             parent.remove();
           });
-
+          _clearCreationFields();
         },
         error: function(xhr, status, error) {
-          twxml_module.showErrorMessage('#create_status_response', xhr);
+          _showAjaxErrorMessage('#create_status_response', xhr);
         }
       });
     }
   });
-
-
 
   /**********************/
   /* CONFIGURE DATA SET */
@@ -183,32 +217,34 @@ $(document).ready(function() {
         dsName: $('input[name=config_dsName_input]').val(),
         fileContent: JSON.stringify(content)
       };
-      $.post('/configure', _requestBody, function(data) {
-          if (typeof data.error === 'undefined') {
-            showSuccessCodeServerResponse('#config_status_response', data.status);
-            $('#json_content').html(JSONPrinter.json.prettyPrint(data));
-            useIt(_requestBody.dsName, '#config_status_response');
-          } else {
-            console.log('ERRORS on Success : ' + JSON.stringify(data));
-          }
+      $.post('/configure', _requestBody, function(data, status) {
+          _showSuccessMessage('#config_status_response', status);
+          _showServerResponse('#json_content', data);
+          //$('#json_content').html(JSONPrinter.json.prettyPrint(data));
+          useIt(_requestBody.dsName, '#config_status_response');
       }).fail(function(data) {
-        twxml_module.showServerErrorMessage('#json_content', data);
+        _showErrorMessage('#json_content', data);
       });
     };
 
     reader.onerror = function(xhr, status, error) {
-      twxml_module.showErrorMessage('#config_status_response', xhr);
+      _showAjaxErrorMessage('#config_status_response', xhr);
     };
   });
 
   /*******************/
   /* UPLOAD DATA SET */
   /*******************/
-  $('#input_csv_file').bootstrapFileInput();
-  $('#input_csv_file').on('change', function(event) {
+  $('#upl').bootstrapFileInput();
+  $('#upl').on('change', function(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
     var _dsName = $('#upload_dsName_input').val();
-    var _headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, false);
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/data");
+    var _headers = {
+      'Accept': 'application/json',
+      'neuron-application-id':CONFIGS.neuron_app_id
+    };
+    var _url = _buildURL("/datasets/" + _dsName + "/data");
     var _files = event.target.files;
 
     if (window.FormData) {
@@ -227,17 +263,16 @@ $(document).ready(function() {
           processData: false,
           contentType: false,
           success: function(json, textStatus, xhr) {
-            showSuccessCodeServerResponse('#upload_status_response', textStatus);
-            $('#upload_content').html(JSONPrinter.json.prettyPrint(json));
+            _showSuccessMessage('#upload_status_response', textStatus);
+            _showServerResponse('#upload_content', json);
             $('#upload_job_id_input').val(json.resultId);
             $('#collapseFour').addClass('in');
           },
           error: function(xhr, status, error) {
-            twxml_module.showServerErrorMessage('#upload_status_response', xhr);
+            _showAjaxErrorMessage('#upload_status_response', xhr);
           }
         });
       }
-
     }
   });
 
@@ -248,7 +283,7 @@ $(document).ready(function() {
     var params = {
       jobID: $('#upload_job_id_input').val()
     };
-    twxml_module.getJobStatus(event, params, '#get_upload_content_status', '#upload_status_response');
+    twxml_module.getJobStatus(event, params, '#upload_content', '#upload_status_response');
   });
 
   /*******************/
@@ -263,19 +298,17 @@ $(document).ready(function() {
       'maxAtATime': $('#signals_max_input').val()
     };
 
-    $.post('/submit_signals', _requestBody, function(data) {
+    $.post('/submit_signals', _requestBody, function(data, status) {
       $('#collapseFive').addClass('in');
-      showSuccessCodeServerResponse('#signals_status_response', textStatus);
-      $('#signals_content').html(JSONPrinter.json.prettyPrint(data));
+      _showSuccessMessage('#signals_status_response', status);
+      _showServerResponse('#signals_content', data);
       $('#signals_job_id_input').val(data.resultId);
       $('#signals_results_id_input').val(data.resultId);
       $('#collapseSix').addClass('in');
-      $('#collapseSeven').addClass('in');
     }).fail(function(data) {
-      twxml_module.showServerErrorMessage('#signals_status_response', data);
+      _showErrorMessage('#signals_status_response', data);
     });
   });
-
 
   /**************************/
   /* GET SIGNALS JOB STATUS */
@@ -284,7 +317,7 @@ $(document).ready(function() {
     var params = {
       jobID: $('#signals_job_id_input').val()
     };
-    twxml_module.getJobStatus(event, params, '#get_signals_content_status', '#signals_status_response');
+    twxml_module.getJobStatus(event, params, '#signals_content', '#signals_status_response');
   });
 
   /**************************/
@@ -315,16 +348,16 @@ $(document).ready(function() {
       'exclusions': $('#profiles_exclusions_input').val() || []
     };
 
-    $.post('/submit_profiles', _requestBody, function(data) {
+    $.post('/submit_profiles', _requestBody, function(data, status) {
       $('#collapseFive').addClass('in');
-      showSuccessCodeServerResponse('#profiles_status_response', textStatus);
-      $('#profiles_content').html(JSONPrinter.json.prettyPrint(data));
+      _showSuccessMessage('#profiles_status_response', status);
+      _showServerResponse('#profiles_content', data);
+      //$('#profiles_content').html(JSONPrinter.json.prettyPrint(data));
       $('#profiles_job_id_input').val(data.resultId);
       $('#profiles_results_id_input').val(data.resultId);
       $('#collapseEight').addClass('in');
-      $('#collapseNine').addClass('in');
     }).fail(function(data) {
-      twxml_module.showServerErrorMessage('#profiles_status_response', data);
+      _showErrorMessage('#profiles_status_response', data);
     });
   });
 
@@ -335,7 +368,7 @@ $(document).ready(function() {
     var params = {
       jobID: $('#profiles_job_id_input').val()
     };
-    twxml_module.getJobStatus(event, params, '#get_profiles_content_status', '#profiles_status_response');
+    twxml_module.getJobStatus(event, params, '#profiles_content', '#profiles_status_response');
   });
 
   /***************************/
@@ -362,16 +395,16 @@ $(document).ready(function() {
       'hierarchy': $('#clusters_hierarchy_input').val()
     };
 
-    $.post('/submit_clusters', _requestBody, function(data) {
+    $.post('/submit_clusters', _requestBody, function(data, status) {
       $('#collapseEleven').addClass('in');
-      showSuccessCodeServerResponse('#clusters_status_response', textStatus);
-      $('#clusters_content').html(JSONPrinter.json.prettyPrint(data));
+      _showSuccessMessage('#clusters_status_response', status);
+      _showServerResponse('#clusters_content', data);
+      //$('#clusters_content').html(JSONPrinter.json.prettyPrint(data));
       $('#clusters_job_id_input').val(data.resultId);
       $('#clusters_results_id_input').val(data.resultId);
       $('#collapseTwelve').addClass('in');
-      $('#collapseThirteen').addClass('in');
     }).fail(function(data) {
-      twxml_module.showServerErrorMessage('#clusters_status_response', data);
+      _showErrorMessage('#clusters_status_response', data);
     });
   });
 
@@ -382,7 +415,7 @@ $(document).ready(function() {
     var params = {
       jobID: $('#clusters_job_id_input').val()
     };
-    twxml_module.getJobStatus(event, params, '#get_clusters_content_status', '#clusters_status_response');
+    twxml_module.getJobStatus(event, params, '#clusters_content', '#clusters_status_response');
   });
 
   /***************************/
@@ -433,15 +466,15 @@ $(document).ready(function() {
       'learners': _learners
     };
 
-    $.post('/submit_predictions', _requestBody, function(data) {
-      showSuccessCodeServerResponse('#predictions_status_response', textStatus);
-      $('#predictions_content').html(JSONPrinter.json.prettyPrint(data));
+    $.post('/submit_predictions', _requestBody, function(data, status) {
+      _showSuccessMessage('#predictions_status_response', status);
+      _showServerResponse('#predictions_content', data);
+      //$('#predictions_content').html(JSONPrinter.json.prettyPrint(data));
       $('#predictions_job_id_input').val(data.resultId);
       $('#predictions_results_id_input').val(data.resultId);
       $('#collapseFourteen').addClass('in');
-      $('#collapseFifteen').addClass('in');
     }).fail(function(data) {
-      twxml_module.showServerErrorMessage('#predictions_status_response', data);
+      _showErrorMessage('#predictions_status_response', data);
     });
   });
 
@@ -452,7 +485,7 @@ $(document).ready(function() {
     var params = {
       jobID: $('#predictions_job_id_input').val()
     };
-    twxml_module.getJobStatus(event, params, '#get_predictions_content_status', '#predictions_status_response');
+    twxml_module.getJobStatus(event, params, '#predictions_content', '#predictions_status_response');
   });
 
   /******************************/

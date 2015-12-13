@@ -31,8 +31,8 @@ var async_version             = require('./routes/async/version'),
     async_submit_clusters     = require('./routes/async/submit_clusters'),
     async_submit_predictions  = require('./routes/async/submit_predictions'),
     async_job_status          = require('./routes/async/job_status'),
-    async_job_results         = require('./routes/async/job_results'),
-    async_upload_dataset      = require('./routes/async/upload_dataset');
+    async_job_results         = require('./routes/async/job_results');
+    //async_upload_dataset      = require('./routes/async/upload_dataset');
 
 // Express initialization
 // ------------------------------------------------
@@ -83,7 +83,7 @@ app.use('/create_dataset', async_create_dataset);
 app.use('/use_dataset', async_use_dataset);
 app.use('/delete_dataset', async_delete_dataset);
 app.use('/configure', async_configure_dataset);
-app.use('/upload', async_upload_dataset);
+//app.use('/upload', async_upload_dataset);
 app.use('/submit_signals', async_submit_signals);
 app.use('/submit_profiles', async_submit_profiles);
 app.use('/submit_clusters', async_submit_clusters);

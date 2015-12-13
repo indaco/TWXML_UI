@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
-  /************************************/
-  /* CREATE DATA SET FORMA VALIDATION */
-  /************************************/
+  /***********************************/
+  /* CREATE DATA SET FORM VALIDATION */
+  /***********************************/
   $('#createform').formValidation({
       framework: 'bootstrap',
       icon: {
