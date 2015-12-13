@@ -54,7 +54,6 @@ app.use(version);
 
 // App Locals
 // ------------------------------------------------
-app.locals.pretty = true;
 app.locals.neuron_config = {
   host: config.get('host'),
   port: config.get('port') || 80,
@@ -84,7 +83,7 @@ app.use('/create_dataset', async_create_dataset);
 app.use('/use_dataset', async_use_dataset);
 app.use('/delete_dataset', async_delete_dataset);
 app.use('/configure', async_configure_dataset);
-app.use('/upload_dataset', async_upload_dataset);
+app.use('/upload', async_upload_dataset);
 app.use('/submit_signals', async_submit_signals);
 app.use('/submit_profiles', async_submit_profiles);
 app.use('/submit_clusters', async_submit_clusters);
@@ -106,6 +105,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
+  app.locals.pretty = true;
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
