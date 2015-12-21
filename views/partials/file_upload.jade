@@ -1,21 +1,15 @@
 br
 br
-//form#upload_ds_form.form-horizontal(method="post" enctype="multipart/form-data" action="/actions")
 form#upload_ds_form.form-horizontal(method="post" enctype="multipart/form-data")
   fieldset
   .form-group
     label.col-md-4.control-label(for="upload_dsName_input") Dataset name
     .col-md-6
-      //input#upload_dsName_input.form-control.input-md(type="text" name="upload_dsName_input" placeholder="Dataset name")
       input#upload_dsName_input.form-control.input-md(type="text" name="upload_dsName_input" placeholder="Dataset name" disabled="disabled")
   .form-group
-    label.col-md-4.control-label(for="upl") CSV Data Set file
+    label.col-md-4.control-label(for="upl") CSV Dataset file
     .col-md-6
       input#upl.btn-primary(type="file" name="upl")
-  //.form-group
-  //  label.col-md-4.control-label(for="upload_btn")
-  //  .col-md-6
-  //    input#upload_btn.btn.btn-success(type="submit")
 output#upload_status_response
 .container-fluid
   .row

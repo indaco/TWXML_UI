@@ -17,23 +17,6 @@ var home_page     = require('./routes/index'),
     actions_page  = require('./routes/actions'),
     glossary_page = require('./routes/glossary');
 
-
-// Async Routes setup
-// ------------------------------------------------
-var async_version             = require('./routes/async/version'),
-    async_dataset_list        = require('./routes/async/dataset_list'),
-    async_create_dataset      = require('./routes/async/create_dataset'),
-    async_use_dataset         = require('./routes/async/use_dataset'),
-    async_delete_dataset      = require('./routes/async/delete_dataset'),
-    async_configure_dataset   = require('./routes/async/configure_dataset'),
-    async_submit_signals      = require('./routes/async/submit_signals'),
-    async_submit_profiles     = require('./routes/async/submit_profiles'),
-    async_submit_clusters     = require('./routes/async/submit_clusters'),
-    async_submit_predictions  = require('./routes/async/submit_predictions'),
-    async_job_status          = require('./routes/async/job_status'),
-    async_job_results         = require('./routes/async/job_results');
-    //async_upload_dataset      = require('./routes/async/upload_dataset');
-
 // Express initialization
 // ------------------------------------------------
 var app = express();
@@ -74,22 +57,6 @@ app.use('/', home_page);
 app.use('/learn', learn_page);
 app.use('/actions', actions_page);
 app.use('/glossary', glossary_page);
-
-// Async Routes
-// ------------------------------------------------
-app.use('/version', async_version);
-app.use('/dataset_list', async_dataset_list);
-app.use('/create_dataset', async_create_dataset);
-app.use('/use_dataset', async_use_dataset);
-app.use('/delete_dataset', async_delete_dataset);
-app.use('/configure', async_configure_dataset);
-//app.use('/upload', async_upload_dataset);
-app.use('/submit_signals', async_submit_signals);
-app.use('/submit_profiles', async_submit_profiles);
-app.use('/submit_clusters', async_submit_clusters);
-app.use('/submit_predictions', async_submit_predictions);
-app.use('/job_status', async_job_status);
-app.use('/job_results', async_job_results);
 
 // Error handlers
 // ------------------------------------------------

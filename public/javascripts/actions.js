@@ -64,6 +64,11 @@ function _showSuccessMessage(element, msg) {
   $(element).show();
 }
 
+function _showInfoMessage(element, msg) {
+  $(element).html("<div class='alert alert-info'><b>Dataset Configuration Info:</b>" + msg + "</div>");
+  $(element).show();
+}
+
 function _showErrorMessage(element, data) {
   var msg = "<div class='alert alert-danger'> " +
     "Error: <br/><b>" + data.responseJSON.errorMessage +
@@ -73,10 +78,8 @@ function _showErrorMessage(element, data) {
 }
 
 function _getDataSetInfo(json) {
-  var output = [];
-  output.push('<li>No. Features: <strong>' + json.length + '</strong></li>');
-  output.push('<li> Goals: <strong>' + retrieveGoals(json) + '</strong></li>');
-  return output;
+  return '<li>No. Features: <strong>' + json.length + '</strong></li>'
+        + '<li> Goals: <strong>' + _retrieveGoals(json) + '</strong></li>';
 }
 
 function _retrieveGoals(json) {
@@ -90,7 +93,7 @@ function _retrieveGoals(json) {
 }
 
 function useIt(datasetName, errorArea) {
-  $.get('/use_dataset', {dsName: datasetName}, function(data) {
+  $.get('/actions/use', {dsName: datasetName}, function(data) {
     _setDSInputFields(datasetName);
     _setDSGoalsSelectField(_retrieveGoals(data));
   }).fail(function(data) {
@@ -102,7 +105,7 @@ function useIt(datasetName, errorArea) {
 /* GET DATA SET LIST */
 /*********************/
 function getDataSetList() {
-  $.get('/dataset_list', function(data) {
+  $.get('/actions/dsList', function(data) {
     for (i = 0; i < data.length; i++) {
       _drawRow(data[i], i);
     }
@@ -128,7 +131,7 @@ $(document).ready(function() {
   /*****************/
   $('#checkVersionBtn').click(function(event) {
     event.preventDefault();
-    $.get('/version', function(data) {
+    $.get('/actions/version', function(data) {
       alert("You are using ThingWorx ML revision: " + data.implementationVersion);
     }).fail( function(data) {
         alert(data);
@@ -144,12 +147,10 @@ $(document).ready(function() {
       "name": $('#create_dsName').val(),
       "description": $('#description').val()
     };
-    $.post('/create_dataset', _requestBody, function(data) {
+    $.post('/actions/create', _requestBody, function(data) {
       _setDSInputFields(_requestBody.name);
-      //$('#create_content').html(JSONPrinter.json.prettyPrint(data));
       _showServerResponse('#create_content', data);
       _drawRow(data);
-      //_countDataSets();
       _clearCreationFields();
       $('#create_status_response').html("");
       $('#create_status_response').hide();
@@ -180,7 +181,7 @@ $(document).ready(function() {
       var _dsName = $(this).closest("tr").find(".dsname").text();
       $.ajax({
         type: 'DELETE',
-        url: '/delete_dataset',
+        url: '/actions/delete',
         data: {"dsName": _dsName},
         beforeSend: function() {
           parent.animate({
@@ -217,10 +218,11 @@ $(document).ready(function() {
         dsName: $('input[name=config_dsName_input]').val(),
         fileContent: JSON.stringify(content)
       };
-      $.post('/configure', _requestBody, function(data, status) {
+      $.post('/actions/configure', _requestBody, function(data, status) {
+          _showInfoMessage('#json_list', _getDataSetInfo(data))
           _showSuccessMessage('#config_status_response', status);
+          //$('#json_list').html(_getDataSetInfo(data));
           _showServerResponse('#json_content', data);
-          //$('#json_content').html(JSONPrinter.json.prettyPrint(data));
           useIt(_requestBody.dsName, '#config_status_response');
       }).fail(function(data) {
         _showErrorMessage('#json_content', data);
@@ -298,7 +300,7 @@ $(document).ready(function() {
       'maxAtATime': $('#signals_max_input').val()
     };
 
-    $.post('/submit_signals', _requestBody, function(data, status) {
+    $.post('/actions/submitSignals', _requestBody, function(data, status) {
       $('#collapseFive').addClass('in');
       _showSuccessMessage('#signals_status_response', status);
       _showServerResponse('#signals_content', data);
@@ -348,11 +350,10 @@ $(document).ready(function() {
       'exclusions': $('#profiles_exclusions_input').val() || []
     };
 
-    $.post('/submit_profiles', _requestBody, function(data, status) {
+    $.post('/actions/submitProfiles', _requestBody, function(data, status) {
       $('#collapseFive').addClass('in');
       _showSuccessMessage('#profiles_status_response', status);
       _showServerResponse('#profiles_content', data);
-      //$('#profiles_content').html(JSONPrinter.json.prettyPrint(data));
       $('#profiles_job_id_input').val(data.resultId);
       $('#profiles_results_id_input').val(data.resultId);
       $('#collapseEight').addClass('in');
@@ -395,11 +396,10 @@ $(document).ready(function() {
       'hierarchy': $('#clusters_hierarchy_input').val()
     };
 
-    $.post('/submit_clusters', _requestBody, function(data, status) {
+    $.post('/actions/submitClusters', _requestBody, function(data, status) {
       $('#collapseEleven').addClass('in');
       _showSuccessMessage('#clusters_status_response', status);
       _showServerResponse('#clusters_content', data);
-      //$('#clusters_content').html(JSONPrinter.json.prettyPrint(data));
       $('#clusters_job_id_input').val(data.resultId);
       $('#clusters_results_id_input').val(data.resultId);
       $('#collapseTwelve').addClass('in');
@@ -436,24 +436,24 @@ $(document).ready(function() {
   /***********************/
   $('#predictions-btn').click(function(event) {
     event.preventDefault();
-    var _learners = [];
+    var _learners = new Array();
     var _learningTechnique;
     if ($('#BACKPROP_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#BACKPROP').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#BACKPROP').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
 
     if ($('#GRADIENT_BOOST_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#GRADIENT_BOOST').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#GRADIENT_BOOST').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
     if ($('#NEURON_DECISION_TREE_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#NEURON_DECISION_TREE').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#NEURON_DECISION_TREE').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
 
     if ($('#LINEAR_REGRESSION_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#LINEAR_REGRESSION').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#LINEAR_REGRESSION').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
 
@@ -463,16 +463,18 @@ $(document).ready(function() {
       'description': $('#predictions_goal_desc_input').val(),
       'iterativeTrainingRecordSampleSize': $('#predictions_iterativeTrainingRecordSampleSize_input').val(),
       'ensembleTechnique': $('#predictions_ensabletechnique_select').find(":selected").val(),
-      'learners': _learners
+      'learners': JSON.stringify(_learners),
+      'exclusions': [ ],
+      'filter': null,
+      'miThreshold':  $('#predictions_miThreshold_input').val()
     };
 
-    $.post('/submit_predictions', _requestBody, function(data, status) {
+    $.post('/actions/submitPredictions', _requestBody, function(data, status) {
       _showSuccessMessage('#predictions_status_response', status);
       _showServerResponse('#predictions_content', data);
-      //$('#predictions_content').html(JSONPrinter.json.prettyPrint(data));
       $('#predictions_job_id_input').val(data.resultId);
       $('#predictions_results_id_input').val(data.resultId);
-      $('#collapseFourteen').addClass('in');
+      $('#collapseFifteen').addClass('in');
     }).fail(function(data) {
       _showErrorMessage('#predictions_status_response', data);
     });
@@ -494,7 +496,7 @@ $(document).ready(function() {
   $('#get_predictions_results_btn').click(function(event) {
     event.preventDefault();
     var params = {
-      jobType: 'predictions',
+      jobType: 'prediction',
       dsName: $('#predictions_ds_name_input').val(),
       jobID: $('#predictions_results_id_input').val()
     };

@@ -59,6 +59,11 @@ form#predictionsform.form-horizontal
           input#LINEAR_REGRESSION(type="text" class="form-control" aria-label="...", value="LINEAR_REGRESSION", readonly)
     // Text input
     .form-group
+      label.col-md-4.control-label(for='predictions-miThreshold') miThreshold
+      .col-md-6
+        input#predictions_miThreshold_input.form-control.input-md(type="text", name="predictions_miThreshold_input", value=0.01, data-toggle="popover", data-animation="true" data-trigger="hover" data-placement="bottom" data-content="Allows the user to select the threshold for which features are possible for inclusion based on their signal strength. Default miThresold=0.01.")
+    // Text input
+    .form-group
       label.col-md-4.control-label(for='predictions-btn')
       .col-md-6
         button#predictions-btn.btn.btn-success(type="button") Submit

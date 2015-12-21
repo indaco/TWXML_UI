@@ -29,7 +29,7 @@ var TWXMLModule = library( function () {
 
     getJobStatus: function (event, params, content_element, status_element) {
       event.preventDefault();
-      $.get('/job_status', params, function(data) {
+      $.get('/actions/jobStatus', params, function(data) {
         $(content_element).html(_jsonPrinter.prettyPrint(data));
       }).fail(function(data) {
         $(status_element).html(_buildServerErrorMessage(data));
@@ -39,7 +39,7 @@ var TWXMLModule = library( function () {
 
     getJobResults: function (event, params, content_element, status_element) {
       event.preventDefault();
-      $.get('/job_results', params, function(data) {
+      $.get('/actions/jobResults', params, function(data) {
         $(content_element).html(_jsonPrinter.prettyPrint(data));
       }).fail(function(data) {
         $(status_element).html(_buildServerErrorMessage(data));

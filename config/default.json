@@ -1,7 +1,7 @@
 {
-  "host": "10.199.70.146",
-  "port": "8080",
+  "host": "_ip_address_",
+  "port": "_port_number_",
   "ssl": false,
-  "neuron_app_id": "neuronuser",
-  "neuron_app_key": "neuronuser"
+  "neuron_app_id": "_neuron_app_id_",
+  "neuron_app_key": "_neuron_app_key_"
 }

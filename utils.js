@@ -13,9 +13,6 @@ handleServerError = function(data) {
 getJobResultsURLByJobType = function(params) {
   var _url = "";
   switch (params.jobType) {
-    case "clusters":
-      _url = "/datasets/" + params.dsName + "/" + params.jobType + "/" + params.jobID;
-      break;
     default:
       _url ="/datasets/" + params.dsName + "/" + params.jobType + "/" + params.jobID + "/results";
   }

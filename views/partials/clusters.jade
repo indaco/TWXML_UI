@@ -22,8 +22,7 @@ form#clustersform.form-horizontal
     .form-group
       label.col-md-4.control-label(for='clusters_hierarchy_input') Hierarchy
       .col-md-6
-        input#clusters_hierarchy_input.form-control.input-md(type="text", name="clusters_hierarchy_input", value=2)
-        span.help-block The number of clusters to generate. Value must be greater than or equal to 2. OPTION 1 (without secondary clusters) : [ x ] - OPTION 2 (with secondary clusters): [ x , y ]
+        input#clusters_hierarchy_input.form-control.input-md(type="text", name="clusters_hierarchy_input", value=2, data-toggle="popover", data-animation="true" data-trigger="hover" data-placement="bottom" data-content="The number of clusters to generate. Value must be greater than or equal to 2. OPTION 1 (without secondary clusters) : [ x ] - OPTION 2 (with secondary clusters): [ x , y ]")
     // Text input
     .form-group
       label.col-md-4.control-label(for='clusters-btn')
@@ -55,7 +54,7 @@ output#clusters_status_response
         #panel13.panel.panel-default
           .panel-heading
             h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseThirteen', href='#collapseThirteen') clusters Results
+              a(data-toggle='collapse', data-target='#collapseThirteen', href='#collapseThirteen') Clusters Results
           #collapseThirteen.panel-collapse.collapse
             .panel-body
               form.form-inline
