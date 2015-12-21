@@ -1,0 +1,34 @@
+doctype html
+html
+	head
+		title #{title}
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible", content="IE=edge")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		meta(name="description", content="Experimental ThingworxML UI")
+		meta(name="author", content="Mirco Veltri")
+		// stylesheets
+		link(rel="stylesheet", href="/stylesheets/bootstrap.min.css")
+		link(rel="stylesheet", href="/stylesheets/gh-fork-ribbon.css")
+		<!--[if lt IE 9]>
+		link(rel="stylesheet" href="/stylesheets/gh-fork-ribbon.ie.min.css")
+		<![endif]-->
+		link(rel="stylesheet", href="/stylesheets/header.css")
+		link(rel="stylesheet", href="/stylesheets/footer.css")
+		link(rel="stylesheet", href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")
+		link(rel="stylesheet", href="/stylesheets/cover.css")
+		// javascripts
+		script(src="/javascripts/3rdparty/jquery.min.js")
+		script(src="/javascripts/3rdparty/bootstrap.min.js")
+		script(src="/javascripts/3rdparty/ie10-viewport-bug-workaround.js")
+	body
+		
+		.github-fork-ribbon-wrapper.right
+			.github-fork-ribbon
+				a(href="https://github.com/indaco/TWXML_UI", target="_blank") Fork me on GitHub
+
+		
+		block content
+			
+		block footer
+			include ../partials/footer.jade

@@ -4,6 +4,16 @@ form#filtersform.form-horizontal
   fieldset
     // Text input
     .form-group
-      label.col-md-4.control-label(for='filters_ds_name_input') Data Set name
+      label.col-md-4.control-label(for='filters_ds_name_input') Dataset name
       .col-md-6
-        input#filters_ds_name_input.form-control.input-md(type="text", name="filters_ds_name_input", disabled='disabled')
+        input#filters_ds_name_input.form-control.input-md(type="text", name="filters_ds_name_input", disabled="disabled")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='filter_name_input') Filter name
+      .col-md-6
+        input#filter_name_input.form-control.input-md(type="text", name="filter_name_input")
+    // Text input
+    .form-group
+      label.col-md-4.control-label(for='filter_description_input') Description
+      .col-md-6
+        input#filter_description_input.form-control.input-md(type="text", name="filter_description_input")

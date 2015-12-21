@@ -1,44 +1,34 @@
 br
 br
-form#uploaddatasetform.form-horizontal(enctype="multipart/form-data")
+form#upload_ds_form.form-horizontal(method="post" enctype="multipart/form-data")
   fieldset
-    // Text input
-    .form-group
-      label.col-md-4.control-label(for='dataset-name-input') Data Set name
-      .col-md-6
-        input#dataset-name-input.form-control.input-md(type="input", disabled='disabled')
-    // Text input
-    .form-group
-      label.col-md-4.control-label(for='input-csv-file') CSV Data Set file
-      .col-md-6
-        input#input-csv-file.btn-primary(type="file", multiple)
+  .form-group
+    label.col-md-4.control-label(for="upload_dsName_input") Dataset name
+    .col-md-6
+      input#upload_dsName_input.form-control.input-md(type="text" name="upload_dsName_input" placeholder="Dataset name" disabled="disabled")
+  .form-group
+    label.col-md-4.control-label(for="upl") CSV Dataset file
+    .col-md-6
+      input#upl.btn-primary(type="file" name="upl")
 output#upload_status_response
 .container-fluid
   .row
-    .col-md-6
-      #accordion.panel-group
-        #panel3.panel.panel-default
-          .panel-heading
-            h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseThree', href='#collapseThree') Server Response
-          #collapseThree.panel-collapse.collapse
-            .panel-body
-              pre
-                code#upload_content
-    .col-md-6
+    .col-md-12
       #accordion.panel-group
         #panel4.panel.panel-default
           .panel-heading
             h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseFour', href='#collapseFour') Job Status
+              a(data-toggle="collapse", data-target="#collapseFour", href="#collapseFour") Job Status
           #collapseFour.panel-collapse.collapse
             .panel-body
               form.form-inline
                 .form-group
-                  label.sr-only(for='upload-job-id-input') Job ID
+                  label.sr-only(for="upload-job-id-input") Job ID
                   .input-group
                     .input-group-addon ID
                     input#upload_job_id_input.form-control(type="text", placeholder="Job ID")
-                  button#get_upload_status_btn.btn.btn-success(type='button') Get Job Status
-              pre
-                code#get_upload_content_status
+                  button#get_upload_status_btn.btn.btn-success(type="button") Get Job Status
+                pre
+                  code
+                    #upload_content
+                

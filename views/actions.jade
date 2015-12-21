@@ -1,34 +1,33 @@
-extends layouts/page_layout
+extends layouts/page
 
 block content
 	br
 	br
-	br
-	.container
+	.container-fluid
 		.jumbotron
 			p.lead Use this tool as a way to quickly start any new project
 			p
 				button#checkVersionBtn.btn.btn-primary(name='checkVersionBtn') Get ThingWorx ML Version
 				#responseVersionArea
-		ul.nav.nav-tabs
-			li.active
-				a(data-toggle='tab', href='#start') Start
-			li
-				a(data-toggle='tab', href='#configure') Configure Data Set
-			li
-				a(data-toggle='tab', href='#upload') Upload Data
-			li
-				a(data-toggle='tab', href='#filters') Filters
-			li
-				a(data-toggle='tab', href='#signals') Signals
-			li
-				a(data-toggle='tab', href='#profiles') Profiles
-			li
-				a(data-toggle='tab', href='#clusters') Clusters
-			li
-				a(data-toggle='tab', href='#prediction') Prediction
+		ul.nav.nav-tabs(role="tablist")
+			li#start_li.active(role="presentation")
+				a(href='#start' aria-control='start' role='tab' data-toggle='tab') Start
+			li(role="presentation")
+				a(href='#configure' aria-control='configure' role='tab' data-toggle='tab') Configure Dataset
+			li#update_li(role="presentation")
+				a(href='#upload' aria-control='upload' role='tab' data-toggle='tab') Upload Dataset
+			//li(role="presentation")
+			//	a(href='#filters' aria-control='filters' role='tab' data-toggle='tab') Filters
+			li(role="presentation")
+				a(href='#signals' aria-control='signals' role='tab' data-toggle='tab') Signals
+			li(role="presentation")
+				a(href='#profiles' aria-control='profiles' role='tab' data-toggle='tab') Profiles
+			li(role="presentation")
+				a(href='#clusters' aria-control='clusters' role='tab' data-toggle='tab') Clusters
+			li(role="presentation")
+				a(href='#prediction' aria-control='prediction' role='tab' data-toggle='tab') Prediction
 		.tab-content
-			#start.tab-pane.fade.in.active
+			#start.tab-pane.fade.in.active(role="tabpanel")
 				.container-fluid
 					.row
 						.col-md-12
@@ -36,32 +35,43 @@ block content
 					.row
 						.col-md-12
 							include partials/create.jade	
-			#configure.tab-pane.fade
+			#configure.tab-pane.fade(role="tabpanel")
 				include partials/config_dataset.jade
-			#upload.tab-pane.fade
+			#upload.tab-pane.fade(role="tabpanel")
 				include partials/file_upload.jade
-			#filters.tab-pane.fade
-				include partials/filters.jade
-			#signals.tab-pane.fade
+			//#filters.tab-pane.fade(role="tabpanel")
+			//	include partials/filters.jade
+			#signals.tab-pane.fade(role="tabpanel")
 				include partials/signals.jade 
-			#profiles.tab-pane.fade
+			#profiles.tab-pane.fade(role="tabpanel")
 				include partials/profiles.jade
-			#clusters.tab-pane.fade
+			#clusters.tab-pane.fade(role="tabpanel")
 				include partials/clusters.jade
-			#prediction.tab-pane.fade
+			#prediction.tab-pane.fade(role="tabpanel")
 				include partials/prediction.jade
 
 	script.
 		var CONFIGS = {
-		  protocol: "#{config.protocol}",
-		  host: "#{config.host}",
-			port: "#{config.port}",
-			neuron_app_id: "#{config.neuron_app_id}"
+		  host: "#{neuron_config.host}",
+			port: "#{neuron_config.port}",
+			ssl: "#{neuron_config.ssl}",
+			neuron_app_id: "#{neuron_config.neuron_app_id}",
+			neuron_app_key: "#{neuron_config.neuron_app_key}"
 		};
 		
 	script(src="/javascripts/actions.js")
 	script(src="/javascripts/validators.js")
 	script(src="/javascripts/JSONPrinter.js")
 	script(src="/javascripts/TWXMLModule.js")
-	script(src="/javascripts/3rdparty/bootstrap-spinner.min.js")
+	//script.
+	//	if("#{uploadResult}" === "OK") { 
+	//		$("#start_li").removeClass("active");
+	//		$("#start").removeClass("in active");
+	//		$("#update_li").addClass("active");
+	//		$("#upload").addClass("in active");
+	//		$("#upload").tab('show'); 
+	//		$('#upload_status_response').html("<div class='alert alert-success'>Status: <b>#{resultStatus}</b></div>");
+	//		$('#upload_job_id_input').val("#{resultId}");
+	//	}
+	//script(src="/javascripts/3rdparty/bootstrap-spinner.min.js")
 	

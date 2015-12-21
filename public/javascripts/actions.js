@@ -5,17 +5,23 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
   alert('The File APIs are not fully supported in this browser. Try with another one, e.g. Google Chrome');
 }
 
-function setDSInputFields(ds_name) {
-  $('#dataset-name-input').val(ds_name);
-  $('#config-dataset-name-input').val(ds_name);
-  $('filters_ds_name_input').val(ds_name);
+function _buildURL(path) {
+  var _ssl = (_ssl == CONFIGS.ssl);
+  var protocol = (_ssl) ? "https" : "http";
+  return protocol + "://" + CONFIGS.host + ":" + CONFIGS.port + "/1.0" + path;
+}
+
+function _setDSInputFields(ds_name) {
+  $('#config_dsName_input').val(ds_name);
+  $('#upload_dsName_input').val(ds_name);
+  $('#filters_ds_name_input').val(ds_name);
   $('#signals_ds_name_input').val(ds_name);
   $('#profiles_ds_name_input').val(ds_name);
   $('#clusters_ds_name_input').val(ds_name);
   $('#predictions_ds_name_input').val(ds_name);
 }
 
-function setDSGoalsSelectField(goals) {
+function _setDSGoalsSelectField(goals) {
   var opts = [];
   $.each(goals, function(idx, obj) {
     opts.push("<option value='" + obj + "'>" + obj + "</option>");
@@ -26,117 +32,131 @@ function setDSGoalsSelectField(goals) {
   $('#predictions_ds_goal_select').html(opts);
 }
 
-function drawRow(rowData) {
-  var row = $("<tr />")
+function _drawRow(rowData) {
+  var row = $("<tr />");
   $("#dataSetTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
   row.append($('<td class="dsname">' + rowData.name + '</td>'));
   row.append($('<td>' + rowData.description + '</td>'));
   row.append($('<td>' + rowData.optimized + '</td>'));
   row.append($("<td><button class='btn btn-primary btnUseIt' aria-label='Left Align'><span class='glyphicon glyphicon-pencil' aria-hidden='true'/> Use it</button> <button class='btn btn-danger btnDelete' aria-label='Left Align'><span class='glyphicon glyphicon-trash' aria-hidden='true'/> Delete</button></td>"));
-  //row.append($('<td><button class="btnDelete">Delete</button></td>'));
 }
 
-function countDataSets() {
+function _clearCreationFields() {
+  $('#create_dsName').val("");
+  $('#description').val("");
+}
+
+function _countDataSets() {
   $('#rowCount').html("[ # " + ($('#dataSetTable tr').length - 1) + " ]");
 }
 
+function _showAjaxErrorMessage(element, xhr) {
+  $(element).html("<div class='alert alert-danger'>Error: <b>" + JSON.parse(xhr.responseText).errorMessage + "</b></div>");
+  $(element).show();
+}
+
+function _showServerResponse(element, data) {
+  $(element).html(JSONPrinter.json.prettyPrint(data));
+}
+
+function _showSuccessMessage(element, msg) {
+  $(element).html("<div class='alert alert-success'>Status: <b>" + msg + "</b></div>");
+  $(element).show();
+}
+
+function _showInfoMessage(element, msg) {
+  $(element).html("<div class='alert alert-info'><b>Dataset Configuration Info:</b>" + msg + "</div>");
+  $(element).show();
+}
+
+function _showErrorMessage(element, data) {
+  var msg = "<div class='alert alert-danger'> " +
+    "Error: <br/><b>" + data.responseJSON.errorMessage +
+    "</b> <br/>( ID: " + data.responseJSON.errorId + " )</div>";
+  $(element).html(msg);
+  $(element).show();
+}
+
+function _getDataSetInfo(json) {
+  return '<li>No. Features: <strong>' + json.length + '</strong></li>'
+        + '<li> Goals: <strong>' + _retrieveGoals(json) + '</strong></li>';
+}
+
+function _retrieveGoals(json) {
+  goals = [];
+  $.each(json, function(idx, obj) {
+     if(obj.objective === true) {
+       goals.push(obj.fieldName);
+     }
+   });
+   return goals;
+}
+
+function useIt(datasetName, errorArea) {
+  $.get('/actions/use', {dsName: datasetName}, function(data) {
+    _setDSInputFields(datasetName);
+    _setDSGoalsSelectField(_retrieveGoals(data));
+  }).fail(function(data) {
+    _showErrorMessage(errorArea, data);
+  });
+}
+
+/*********************/
+/* GET DATA SET LIST */
+/*********************/
+function getDataSetList() {
+  $.get('/actions/dsList', function(data) {
+    for (i = 0; i < data.length; i++) {
+      _drawRow(data[i], i);
+    }
+    //_countDataSets();
+  }).fail(function(data) {
+    _showErrorMessage('#dsList_status_response', data);
+  });
+}
 
 
 $(document).ready(function() {
+  // TWXMLModule initialization
   var twxml_module = TWXMLModule;
-  var headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, true);
+  // inline help for input fields
   $(function() {
-    $('[data-toggle="popover"]').popover()
+    $('[data-toggle="popover"]').popover();
   });
-
-  function populateDatasetGoals(h, url) {
-    twxml_module.doGET(
-      h,
-      url,
-      function(json, textStatus, xhr) {
-        setDSGoalsSelectField(twxml_module.retrieveGoals(json));
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );
-  }
-
-  /*********************/
-  /* GET DATA SET LIST */
-  /*********************/
-  function getDataSetList(handleData) {
-    var _url = twxml_module.buildURL("/datasets/");
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(data, textStatus, xhr) {
-        handleData(data);
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );
-  }
-
-  getDataSetList(function(output) {
-    for (i = 0; i < output.length; i++) {
-      drawRow(output[i], i)
-    }
-    countDataSets();
-  });
-
+  // regtrieve existing datasets
+  getDataSetList();
 
   /*****************/
   /* CHECK VERSION */
   /*****************/
   $('#checkVersionBtn').click(function(event) {
     event.preventDefault();
-
-    var _url = twxml_module.buildURL("/about/versioninfo");
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(data) {
-        //$("#responseVersionArea").addClass('alert alert-success').html("<h4>You are using ThingWorx ML revision: <b>" + data.implementationVersion + "</b></h4>");
-        alert("You are using ThingWorx ML revision: " + data.implementationVersion);
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#responseVersionArea', xhr);
-      }
-    );
+    $.get('/actions/version', function(data) {
+      alert("You are using ThingWorx ML revision: " + data.implementationVersion);
+    }).fail( function(data) {
+        alert(data);
+    });
   });
-
 
   /*******************/
   /* CREATE DATA SET */
   /*******************/
   $('#createbtn').click(function(event) {
     event.preventDefault();
-
-    var _url = twxml_module.buildURL("/datasets/");
-    var _request_body = {
-      'name': $('#name').val(),
-      'description': $('#description').val(),
-      'optimized': $('#optimized').find(":selected").val()
+    var _requestBody = {
+      "name": $('#create_dsName').val(),
+      "description": $('#description').val()
     };
-
-    //$('#collapseOne').addClass('in');
-    twxml_module.doPOST(
-      headers,
-      _url,
-      _request_body,
-      function(res) {
-        dataset_name = $('#name').val();
-        setDSInputFields(dataset_name);
-        $('#create-content').html(JSONPrinter.json.prettyPrint(res));
-        drawRow(_request_body);
-        countDataSets();
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );
+    $.post('/actions/create', _requestBody, function(data) {
+      _setDSInputFields(_requestBody.name);
+      _showServerResponse('#create_content', data);
+      _drawRow(data);
+      _clearCreationFields();
+      $('#create_status_response').html("");
+      $('#create_status_response').hide();
+    }).fail(function(data) {
+      _showErrorMessage('#create_status_response', data);
+    });
   });
 
   /*******************/
@@ -144,105 +164,90 @@ $(document).ready(function() {
   /*******************/
   $('#dataSetTable').on('click', '.btn.btn-primary.btnUseIt', function(event) {
     event.preventDefault();
-    //var parent = $(this).parent("td").parent("tr");
+    var parent = $(this).parent("td").parent("tr");
     var _dsName = $(this).closest("tr").find(".dsname").text();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/configuration");
-    var opts = [];
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(json, textStatus, xhr) {
-        setDSInputFields(_dsName);
-        setDSGoalsSelectField(twxml_module.retrieveGoals(json));
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#create-status-response', xhr);
-      }
-    );
+
+    useIt(_dsName, '#dsList_status_response');
   });
-
-
 
   /*******************/
   /* DELETE DATA SET */
   /*******************/
   $('#dataSetTable').on('click', '.btn.btn-danger.btnDelete', function(event) {
     var answer = confirm("Do you wish to delete this data set?");
-    if (answer == true) {
+    if (answer === true) {
       event.preventDefault();
       var parent = $(this).parent("td").parent("tr");
       var _dsName = $(this).closest("tr").find(".dsname").text();
-      var _url = twxml_module.buildURL("/datasets/" + _dsName);
-      twxml_module.doDELETE(
-        headers,
-        _url,
-        function() {
+      $.ajax({
+        type: 'DELETE',
+        url: '/actions/delete',
+        data: {"dsName": _dsName},
+        beforeSend: function() {
           parent.animate({
             'background-color': '#fb6c6c'
           }, 300);
         },
-        function() {
+        success: function() {
           parent.fadeOut(300, function() {
             parent.remove();
           });
+          _clearCreationFields();
         },
-        function(xhr, status, error) {
-          twxml_module.showErrorMessage('#create-status-response', xhr);
+        error: function(xhr, status, error) {
+          _showAjaxErrorMessage('#create_status_response', xhr);
         }
-      );
+      });
     }
-
   });
-
-
 
   /**********************/
   /* CONFIGURE DATA SET */
   /**********************/
-  $('#input-json-file').bootstrapFileInput();
-  $('#input-json-file').on('change', function(event) {
-
-    var _dsName = $('#config-dataset-name-input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/configuration");
+  $('#input_json_file').bootstrapFileInput();
+  $('#input_json_file').on('change', function(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
     var _files = event.target.files;
-    // Get file content
+
     var reader = new FileReader();
     reader.readAsText(_files[0], "UTF-8");
     reader.onload = function(evt) {
-      content = JSON.parse(evt.target.result);
-      $('#json-list').addClass("alert alert-info").html('<ul>' + twxml_module.getDataSetInfo(content) + '</ul>');
-      //$('#collapseTwo').addClass('in');
-      twxml_module.doPOST(
-        headers,
-        _url,
-        JSON.parse(evt.target.result),
-        function(json, textStatus, xhr) {
-          $('#config-status-response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-          $('#json-content').html(JSONPrinter.json.prettyPrint(json));;
-          populateDatasetGoals(headers, _url);
-        },
-        function(xhr, status, error) {
-          twxml_module.showServerResponse('#create-content', xhr);
-          //$('#create-content').html("<div class='alert alert-danger'><h4>Error creating data set " + error.message + "reading file</h4></div>");
-        }
-      );
+      var content = JSON.parse(evt.target.result);
+      var _requestBody ={
+        dsName: $('input[name=config_dsName_input]').val(),
+        fileContent: JSON.stringify(content)
+      };
+      $.post('/actions/configure', _requestBody, function(data, status) {
+          _showInfoMessage('#json_list', _getDataSetInfo(data))
+          _showSuccessMessage('#config_status_response', status);
+          //$('#json_list').html(_getDataSetInfo(data));
+          _showServerResponse('#json_content', data);
+          useIt(_requestBody.dsName, '#config_status_response');
+      }).fail(function(data) {
+        _showErrorMessage('#json_content', data);
+      });
     };
+
     reader.onerror = function(xhr, status, error) {
-      twxml_module.showErrorMessage('#config-status-response', xhr);
+      _showAjaxErrorMessage('#config_status_response', xhr);
     };
   });
 
   /*******************/
   /* UPLOAD DATA SET */
   /*******************/
-  $('#input-csv-file').bootstrapFileInput();
-  $('#input-csv-file').on('change', function(event) {
-    var _dsName = $('#dataset-name-input').val();
-    var _headers = twxml_module.getHeaders(CONFIGS.neuron_app_id, false);
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/data");
+  $('#upl').bootstrapFileInput();
+  $('#upl').on('change', function(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var _dsName = $('#upload_dsName_input').val();
+    var _headers = {
+      'Accept': 'application/json',
+      'neuron-application-id':CONFIGS.neuron_app_id
+    };
+    var _url = _buildURL("/datasets/" + _dsName + "/data");
     var _files = event.target.files;
-
-    $('#csv-list').addClass("alert alert-info").html('<ul>' + twxml_module.getFileInfo(_files).join('') + '</ul>');
 
     if (window.FormData) {
       formdata = new FormData();
@@ -251,6 +256,7 @@ $(document).ready(function() {
       if (formdata) {
         $('#collapseThree').addClass('in');
         $('#collapseTwo').addClass('in');
+
         $.ajax({
           url: _url,
           type: "POST",
@@ -259,17 +265,16 @@ $(document).ready(function() {
           processData: false,
           contentType: false,
           success: function(json, textStatus, xhr) {
-            $('#upload_status_response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-            $('#upload_content').html(JSONPrinter.json.prettyPrint(json));
+            _showSuccessMessage('#upload_status_response', textStatus);
+            _showServerResponse('#upload_content', json);
             $('#upload_job_id_input').val(json.resultId);
             $('#collapseFour').addClass('in');
           },
           error: function(xhr, status, error) {
-            twxml_module.showErrorMessage('#upload_status_response', xhr);
+            _showAjaxErrorMessage('#upload_status_response', xhr);
           }
         });
       }
-
     }
   });
 
@@ -277,7 +282,10 @@ $(document).ready(function() {
   /* GET UPLOAD DATA SET JOB STATUS */
   /**********************************/
   $('#get_upload_status_btn').click(function(event) {
-    twxml_module.getJobStatus(event, '#upload_job_id_input', '#get_upload_content_status', '#upload_status_response');
+    var params = {
+      jobID: $('#upload_job_id_input').val()
+    };
+    twxml_module.getJobStatus(event, params, '#upload_content', '#upload_status_response');
   });
 
   /*******************/
@@ -285,47 +293,45 @@ $(document).ready(function() {
   /*******************/
   $('#signals-btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#signals_ds_name_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/signals");
-    var _request_body = {
+    var _requestBody = {
+      'dsName': $('#signals_ds_name_input').val(),
       'goal': $('#signals_ds_goal_select').find(":selected").val(),
       'description': $('#signals_goal_desc_input').val(),
       'maxAtATime': $('#signals_max_input').val()
     };
 
-    twxml_module.doPOST(
-      headers,
-      _url,
-      _request_body,
-      function(json, textStatus, xhr) {
-        $('#collapseFive').addClass('in');
-        $('#signals_status_response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-        $('#signals_content').html(JSONPrinter.json.prettyPrint(json));
-        $('#signals_job_id_input').val(json.resultId);
-        $('#signals_results_id_input').val(json.resultId);
-        $('#collapseSix').addClass('in');
-        $('#collapseSeven').addClass('in');
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#signals_status_response', xhr);
-        //showErrorMessage('#signals_status_response', xhr);
-      }
-    );
+    $.post('/actions/submitSignals', _requestBody, function(data, status) {
+      $('#collapseFive').addClass('in');
+      _showSuccessMessage('#signals_status_response', status);
+      _showServerResponse('#signals_content', data);
+      $('#signals_job_id_input').val(data.resultId);
+      $('#signals_results_id_input').val(data.resultId);
+      $('#collapseSix').addClass('in');
+    }).fail(function(data) {
+      _showErrorMessage('#signals_status_response', data);
+    });
   });
-
 
   /**************************/
   /* GET SIGNALS JOB STATUS */
   /**************************/
   $('#get_signals_status_btn').click(function(event) {
-    twxml_module.getJobStatus(event, '#signals_job_id_input', '#get_signals_content_status', '#signals_status_response');
+    var params = {
+      jobID: $('#signals_job_id_input').val()
+    };
+    twxml_module.getJobStatus(event, params, '#signals_content', '#signals_status_response');
   });
 
   /**************************/
   /* GET SIGNALS JOB RESULT */
   /**************************/
   $('#get_signals_results_btn').click(function(event) {
-    twxml_module.getJobResults(event, '#signals_ds_name_input', '#signals_results_id_input', 'signals', '#signals_results_content', '#signals_status_response');
+    var params = {
+      jobType: 'signals',
+      dsName: $('#signals_ds_name_input').val(),
+      jobID: $('#signals_results_id_input').val()
+    };
+    twxml_module.getJobResults(event, params, '#signals_results_content', '#signals_status_response');
   });
 
   /********************/
@@ -333,9 +339,8 @@ $(document).ready(function() {
   /********************/
   $('#profiles-btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#profiles_ds_name_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/profilesV2");
-    var _request_body = {
+    var _requestBody = {
+      'dsName': $('#profiles_ds_name_input').val(),
       'goal': $('#profiles_ds_goal_select').find(":selected").val(),
       'description': $('#profiles_goal_desc_input').val(),
       'maxDepth': $('#profiles_maxdepth_input').val(),
@@ -345,37 +350,38 @@ $(document).ready(function() {
       'exclusions': $('#profiles_exclusions_input').val() || []
     };
 
-    twxml_module.doPOST(
-      headers,
-      _url,
-      _request_body,
-      function(json, textStatus, xhr) {
-        $('#collapseFive').addClass('in');
-        $('#profiles_status_response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-        $('#profiles_content').html(JSONPrinter.json.prettyPrint(json));
-        $('#profiles_job_id_input').val(json.resultId);
-        $('#profiles_results_id_input').val(json.resultId);
-        $('#collapseEight').addClass('in');
-        $('#collapseNine').addClass('in');
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#profiles_status_response', xhr);
-      }
-    );
+    $.post('/actions/submitProfiles', _requestBody, function(data, status) {
+      $('#collapseFive').addClass('in');
+      _showSuccessMessage('#profiles_status_response', status);
+      _showServerResponse('#profiles_content', data);
+      $('#profiles_job_id_input').val(data.resultId);
+      $('#profiles_results_id_input').val(data.resultId);
+      $('#collapseEight').addClass('in');
+    }).fail(function(data) {
+      _showErrorMessage('#profiles_status_response', data);
+    });
   });
 
   /***************************/
   /* GET PROFILES JOB STATUS */
   /***************************/
   $('#get_profiles_status_btn').click(function(event) {
-    twxml_module.getJobStatus(event, '#profiles_job_id_input', '#get_profiles_content_status', '#profiles_status_response');
+    var params = {
+      jobID: $('#profiles_job_id_input').val()
+    };
+    twxml_module.getJobStatus(event, params, '#profiles_content', '#profiles_status_response');
   });
 
   /***************************/
   /* GET PROFILES JOB RESULT */
   /***************************/
   $('#get_profiles_results_btn').click(function(event) {
-    twxml_module.getJobResults(event, '#profiles_ds_name_input', '#profiles_results_id_input', 'profilesV2', '#profiles_results_content', '#profiles_status_response');
+    var params = {
+      jobType: 'profilesV2',
+      dsName: $('#profiles_ds_name_input').val(),
+      jobID: $('#profiles_results_id_input').val()
+    };
+    twxml_module.getJobResults(event, params, '#profiles_results_content', '#profiles_status_response');
   });
 
   /********************/
@@ -383,38 +389,33 @@ $(document).ready(function() {
   /********************/
   $('#clusters-btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#clusters_ds_name_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/clusters");
-    var _request_body = {
+    var _requestBody = {
+      'dsName': $('#clusters_ds_name_input').val(),
       'goal':$('#clusters_ds_goal_select').find(":selected").val(),
       'description': $('#clusters_goal_desc_input').val(),
-      'hierarchy': [$('#clusters_hierarchy_input').val()]
+      'hierarchy': $('#clusters_hierarchy_input').val()
     };
 
-    twxml_module.doPOST(
-      headers,
-      _url,
-      _request_body,
-      function(json, textStatus, xhr) {
-        $('#collapseEleven').addClass('in');
-        $('#clusters_status_response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-        $('#clusters_content').html(JSONPrinter.json.prettyPrint(json));
-        $('#clusters_job_id_input').val(json.resultId);
-        $('#clusters_results_id_input').val(json.resultId);
-        $('#collapseTwelve').addClass('in');
-        $('#collapseThirteen').addClass('in');
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#profiles_status_response', xhr);
-      }
-    );
+    $.post('/actions/submitClusters', _requestBody, function(data, status) {
+      $('#collapseEleven').addClass('in');
+      _showSuccessMessage('#clusters_status_response', status);
+      _showServerResponse('#clusters_content', data);
+      $('#clusters_job_id_input').val(data.resultId);
+      $('#clusters_results_id_input').val(data.resultId);
+      $('#collapseTwelve').addClass('in');
+    }).fail(function(data) {
+      _showErrorMessage('#clusters_status_response', data);
+    });
   });
 
   /***************************/
   /* GET CLUSTERS JOB STATUS */
   /***************************/
   $('#get_clusters_status_btn').click(function(event) {
-    twxml_module.getJobStatus(event, '#clusters_job_id_input', '#get_clusters_content_status', '#clusters_status_response');
+    var params = {
+      jobID: $('#clusters_job_id_input').val()
+    };
+    twxml_module.getJobStatus(event, params, '#clusters_content', '#clusters_status_response');
   });
 
   /***************************/
@@ -422,19 +423,12 @@ $(document).ready(function() {
   /***************************/
   $('#get_clusters_results_btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#clusters_ds_name_input').val();
-    var _job_id_value = $('#clusters_results_id_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/clusters");
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(json) {
-        $('#clusters_results_content').html(JSONPrinter.json.prettyPrint(json));
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#clusters_status_response', xhr);
-      }
-    );
+    var params = {
+      jobType: 'clusters',
+      dsName: $('#clusters_ds_name_input').val(),
+      jobID: $('#clusters_results_id_input').val()
+    };
+    twxml_module.getJobResults(event, params, '#clusters_results_content', '#clusters_status_response');
   });
 
   /***********************/
@@ -442,60 +436,58 @@ $(document).ready(function() {
   /***********************/
   $('#predictions-btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#predictions_ds_name_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/prediction");
-    var _learners = [];
+    var _learners = new Array();
     var _learningTechnique;
     if ($('#BACKPROP_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#BACKPROP').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#BACKPROP').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
 
     if ($('#GRADIENT_BOOST_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#GRADIENT_BOOST').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#GRADIENT_BOOST').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
     if ($('#NEURON_DECISION_TREE_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#NEURON_DECISION_TREE').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#NEURON_DECISION_TREE').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
 
     if ($('#LINEAR_REGRESSION_checkbox').is(':checked')) {
-         _learningTechnique = {'learningTechnique': $('#LINEAR_REGRESSION').val(), 'args': {} };
+         _learningTechnique = {'learningTechnique': $('#LINEAR_REGRESSION').val(), 'args': { } };
         _learners.push(_learningTechnique);
     }
 
-    var _request_body = {
+    var _requestBody = {
+      'dsName': $('#predictions_ds_name_input').val(),
       'goal': $('#predictions_ds_goal_select').find(":selected").val(),
       'description': $('#predictions_goal_desc_input').val(),
       'iterativeTrainingRecordSampleSize': $('#predictions_iterativeTrainingRecordSampleSize_input').val(),
       'ensembleTechnique': $('#predictions_ensabletechnique_select').find(":selected").val(),
-      'learners': _learners
+      'learners': JSON.stringify(_learners),
+      'exclusions': [ ],
+      'filter': null,
+      'miThreshold':  $('#predictions_miThreshold_input').val()
     };
 
-    twxml_module.doPOST(
-      headers,
-      _url,
-      _request_body,
-      function(json, textStatus, xhr) {
-        $('#predictions_status_response').html("<div class='alert alert-success'>Status Code: <b>" + textStatus + "</b></div>");
-        $('#predictions_content').html(JSONPrinter.json.prettyPrint(json));
-        $('#predictions_job_id_input').val(json.resultId);
-        $('#predictions_results_id_input').val(json.resultId);
-        $('#collapseFourteen').addClass('in');
-        $('#collapseFifteen').addClass('in');
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#profiles_status_response', xhr);
-      }
-    );
+    $.post('/actions/submitPredictions', _requestBody, function(data, status) {
+      _showSuccessMessage('#predictions_status_response', status);
+      _showServerResponse('#predictions_content', data);
+      $('#predictions_job_id_input').val(data.resultId);
+      $('#predictions_results_id_input').val(data.resultId);
+      $('#collapseFifteen').addClass('in');
+    }).fail(function(data) {
+      _showErrorMessage('#predictions_status_response', data);
+    });
   });
 
   /******************************/
   /* GET PREDICTIONS JOB STATUS */
   /******************************/
   $('#get_predictions_status_btn').click(function(event) {
-    twxml_module.getJobStatus(event, '#predictions_job_id_input', '#get_predictions_content_status', '#predictions_status_response');
+    var params = {
+      jobID: $('#predictions_job_id_input').val()
+    };
+    twxml_module.getJobStatus(event, params, '#predictions_content', '#predictions_status_response');
   });
 
   /******************************/
@@ -503,19 +495,12 @@ $(document).ready(function() {
   /******************************/
   $('#get_predictions_results_btn').click(function(event) {
     event.preventDefault();
-    var _dsName = $('#predictions_ds_name_input').val();
-    var _job_id_value = $('#predictions_results_id_input').val();
-    var _url = twxml_module.buildURL("/datasets/" + _dsName + "/clusters");
-    twxml_module.doGET(
-      headers,
-      _url,
-      function(json) {
-        $('#predictions_results_content').html(JSONPrinter.json.prettyPrint(json));
-      },
-      function(xhr, status, error) {
-        twxml_module.showErrorMessage('#predictions_status_response', xhr);
-      }
-    );
+    var params = {
+      jobType: 'prediction',
+      dsName: $('#predictions_ds_name_input').val(),
+      jobID: $('#predictions_results_id_input').val()
+    };
+    twxml_module.getJobResults(event, params, '#predictions_results_content', '#predictions_status_response');
   });
 
 });

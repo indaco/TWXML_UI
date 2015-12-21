@@ -59,23 +59,18 @@ form#predictionsform.form-horizontal
           input#LINEAR_REGRESSION(type="text" class="form-control" aria-label="...", value="LINEAR_REGRESSION", readonly)
     // Text input
     .form-group
+      label.col-md-4.control-label(for='predictions-miThreshold') miThreshold
+      .col-md-6
+        input#predictions_miThreshold_input.form-control.input-md(type="text", name="predictions_miThreshold_input", value=0.01, data-toggle="popover", data-animation="true" data-trigger="hover" data-placement="bottom" data-content="Allows the user to select the threshold for which features are possible for inclusion based on their signal strength. Default miThresold=0.01.")
+    // Text input
+    .form-group
       label.col-md-4.control-label(for='predictions-btn')
       .col-md-6
         button#predictions-btn.btn.btn-success(type="button") Submit
 output#predictions_status_response
 .container-fluid
   .row
-    .col-md-6
-      #accordion.panel-group
-        #panel14.panel.panel-default
-          .panel-heading
-            h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseFourteen', href='#collapseFourteen') Server Response
-          #collapseFourteen.panel-collapse.collapse
-            .panel-body
-              pre
-                code#predictions_content
-    .col-md-6
+    .col-md-12
       #accordion.panel-group
         #panel15.panel.panel-default
           .panel-heading
@@ -91,7 +86,7 @@ output#predictions_status_response
                     input#predictions_job_id_input.form-control(type="text", placeholder="Job ID")
                   button#get_predictions_status_btn.btn.btn-success(type='button') Get Job Status
               pre
-                code#get_predictions_content_status
+                code#predictions_content
   .row
     .col-md-12
       #accordion.panel-group
