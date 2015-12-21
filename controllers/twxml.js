@@ -2,10 +2,6 @@ var unirest   = require('unirest'),
     path 			= require('path'),
     utils     = require(path.join(__dirname, '..', 'utils.js'));
 
-function logArrayElements(element, index, array) {
-  console.log('a[' + index + '] = ' + element);
-}
-
 module.exports.retrieveVersion = function(req, res) {
   var _configs = req.app.locals.neuron_config;
   var options = {
@@ -191,7 +187,7 @@ module.exports.submitPredictions = function(req, res) {
   delete req.body.dsName; // removing dsName from the body params
   var _configs = req.app.locals.neuron_config;
 
-  req.body.exclusions = new Array();
+  req.body.exclusions = [];
   req.body.filter = null;
   req.body.iterativeTrainingRecordSampleSize = parseInt(req.body.iterativeTrainingRecordSampleSize);
   req.body.miThreshold = parseFloat(req.body.miThreshold);
@@ -239,7 +235,6 @@ module.exports.jobResults = function(req, res) {
     url: utils.buildURL(_configs, utils.getJobResultsURLByJobType(req.query)),
     headers: req.app.locals.neuron_headers
   };
-  console.log(options.url);
   unirest.get(options.url)
   .headers(options.headers)
   .end(function(response) {
