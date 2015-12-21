@@ -1,1 +1,0 @@
-DEBUG=TWXMLUI:* npm start
