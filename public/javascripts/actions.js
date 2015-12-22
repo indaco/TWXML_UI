@@ -356,7 +356,7 @@ $(document).ready(function() {
       _showServerResponse('#profiles_content', data);
       $('#profiles_job_id_input').val(data.resultId);
       $('#profiles_results_id_input').val(data.resultId);
-      $('#collapseEight').addClass('in');
+      $('#collapseNine').addClass('in');
     }).fail(function(data) {
       _showErrorMessage('#profiles_status_response', data);
     });
