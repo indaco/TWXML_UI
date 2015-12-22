@@ -2,6 +2,11 @@ var unirest   = require('unirest'),
     path 			= require('path'),
     utils     = require(path.join(__dirname, '..', 'utils.js'));
 
+var sendJsonResponse = function(res, status, content) {
+  res.status(status);
+  res.json(content);
+};
+
 module.exports.retrieveVersion = function(req, res) {
   var _configs = req.app.locals.neuron_config;
   var options = {
@@ -13,7 +18,7 @@ module.exports.retrieveVersion = function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleServerError(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -31,7 +36,7 @@ module.exports.datasetList = function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleServerError(response));
+      sendJsonResponse(res, 400, response.error);
       return;
     }
     res.send(response.body);
@@ -51,7 +56,7 @@ module.exports.datasetCreation = function(req, res) {
   .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleServerError(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -71,7 +76,7 @@ module.exports.datasetConfiguration = function(req, res) {
   .send(options.body)
   .end(function (response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      sendJsonResponse(res, 400, utils.handleErrorMessage(response));
       return;
     }
     res.send(response.body);
@@ -89,7 +94,7 @@ module.exports.useDataset = function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleServerError(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -108,7 +113,7 @@ module.exports.datasetDeletion = function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.send({"statusCode": response.status, "error": response.error});
+      sendJsonResponse(res, 400, utils.handleServerError(response));
     }
     res.send("ok");
   });
@@ -129,7 +134,7 @@ module.exports.submitSignals = function(req, res) {
   .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      rsendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -151,7 +156,7 @@ module.exports.submitProfiles = function(req, res) {
   .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -175,7 +180,7 @@ module.exports.submitClusters = function(req, res) {
   .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -204,7 +209,7 @@ module.exports.submitPredictions = function(req, res) {
   .send(options.body)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -222,7 +227,7 @@ module.exports.jobStatus = function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);
@@ -239,7 +244,7 @@ module.exports.jobResults = function(req, res) {
   .headers(options.headers)
   .end(function(response) {
     if (response.error) {
-      res.sendStatus(400).send(utils.handleErrorMessage(response));
+      sendJsonResponse(res, 400, utils.handleServerError(response));
       return;
     }
     res.send(response.body);

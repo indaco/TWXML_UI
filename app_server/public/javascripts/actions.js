@@ -70,9 +70,15 @@ function _showInfoMessage(element, msg) {
 }
 
 function _showErrorMessage(element, data) {
-  var msg = "<div class='alert alert-danger'> " +
-    "Error: <br/><b>" + data.responseJSON.errorMessage +
-    "</b> <br/>( ID: " + data.responseJSON.errorId + " )</div>";
+  var msg = "";
+  if (data.responseJSON.errorMessage != undefined) {
+    msg = "<div class='alert alert-danger'> " +
+      "Error: <br/><b>" + data.responseJSON.errorMessage +
+      "</b> <br/>( ID: " + data.responseJSON.errorId + " )</div>";
+  } else {
+    msg = "<div class='alert alert-danger'> Error: <br/><b>" + JSON.stringify(data.responseText) + "</b></div>";
+  }
+
   $(element).html(msg);
   $(element).show();
 }

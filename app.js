@@ -1,6 +1,6 @@
 // Required NodeJS modules
 // ------------------------------------------------
-var express = require('express'),
+var express     = require('express'),
     path        = require('path'),
     favicon     = require('serve-favicon'),
     logger      = require('morgan'),
@@ -8,14 +8,14 @@ var express = require('express'),
     config      = require('config'),
     helmet      = require('helmet'),
     cors        = require('cors'),
-    version     = require('./version');
+    version     = require('./app_server/version');
 
 // Routes setup pages
 // ------------------------------------------------
-var home_page     = require('./routes/index'),
-    learn_page    = require('./routes/learn'),
-    actions_page  = require('./routes/actions'),
-    glossary_page = require('./routes/glossary');
+var home_page     = require('./app_server/routes/index'),
+    learn_page    = require('./app_server/routes/learn'),
+    actions_page  = require('./app_server/routes/actions'),
+    glossary_page = require('./app_server/routes/glossary');
 
 // Express initialization
 // ------------------------------------------------
@@ -23,16 +23,16 @@ var app = express();
 
 // view engine setup
 // ------------------------------------------------
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app_server' ,'views'));
 app.set('view engine', 'jade');
 
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'app_server', 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(helmet());
 app.use(cors());
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, 'app_server' ,'public')));
 app.use(version);
 
 // App Locals
@@ -91,6 +91,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
