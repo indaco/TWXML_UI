@@ -1,8 +1,6 @@
 # TWXML_UI
 ## Experimental UI for working with ThingWorx Machine Learning
 
---------------------------------------------------------------------------------
-
 ### Disclaimer
 This is not an official PTC or ThingWorx solution. It's a personal development on top of ThingWorx Machine Learning. PTC and ThingWorx are not responsible of it.
 
@@ -25,14 +23,14 @@ Further information are available on the [Official ThingWorx Web Site](http://ww
 ### What this project is about?
 The goal of this project is to provide an easy and fast tool to start any kind of project with ThingWorx Machine Learning as a standalone advanced analytic engine. Be focused on the job, learn more on ThingWorx Machine Learning doing your job and avoid wasted time.
 
-So it let you to:
+So it lets you to:
 - read the API documentation in order to understand what you need to start
 - use Postman writing Javascript objects to call a REST APIs
 - waste time to fixing the REST API body instead to be focused on what you are trying to achieve in terms of analytics
-- look for a single and easy way to know what input paramenters mean for ThingWorx Machine Learning
+- look for a single and easy way to know the meaning of input parameters
 - ...
 
-#### Features
+### Features
 - HTML5 user interface built with ExpressJS, Bootstrap and JQuery
 - Inline help for input fields
 - _Live_ form validation
@@ -41,34 +39,13 @@ So it let you to:
 - check jobs status directly with one click
 - Glossary
 
+#### Missing features (Up today - v0.2.0)
+- Dataset optimization
+- Filters creations and usage
+- Prescriptive job and results
+
 ### How to use it?
-TWXML_UI is built on top of NodeJS, using ExpressJS framework, Boostrap and JQuery.
-
-Don't worry, to start using it you jast have to install nodejs on your local machine and follow the simple instructions below.
-
-It not takes you more the 10 minute to be productive with ThingWorx Machine Learning.
-
-#### Step-by-Step installation guide
-1. Download and install [NodeJS](https://nodejs.org/en/)
-2. Download this project
-3. Open and Edit the `config/default.json` file with your information
-4. Open a shell / cmd window and move to the path where you save this project
-5. Type `npm install` in order to install all the dependency
-6. Start the server typing:
-  - `bin\start.bat` for Windows users
-  - `bin/start.sh` for Linux or OSX users
-
-7. Open a browser window and visit [http://localhost:3000](http://localhost:3000)
-
-### Contributing
-If you are interested in more features or in fixing something and you havee experience with Javascript and ExpressJS, feel free to contribute.
-
-How to do it?
-- Fork it
-- Create your feature branch (git checkout -b my-new-feature)
-- Commit your changes (git commit -am 'Add some feature')
-- Push to the branch (git push origin my-new-feature)
-- Create new Pull Request
+Please refer to the **HOWTO.pdf** file into the *docs* folder
 
 ### Credits
-Idea and development by me, Mirco.
+(2015) Idea and development by Mirco Veltri; released under [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/) license.
