@@ -1,6 +1,7 @@
 # TWXML_UI
 ## Experimental UI for working with ThingWorx Machine Learning
 
+--------------------------------------------------------------------------------
 ### Disclaimer
 This is not an official PTC or ThingWorx solution. It's a personal development on top of ThingWorx Machine Learning. PTC and ThingWorx are not responsible of it.
 
@@ -30,22 +31,27 @@ So it lets you to:
 - look for a single and easy way to know the meaning of input parameters
 - ...
 
-### Features
+#### Features
 - HTML5 user interface built with ExpressJS, Bootstrap and JQuery
 - Inline help for input fields
 - _Live_ form validation
 - Auto-detect analysis goals
 - Easily creation of Filters and reuse them in other jobs
-- check jobs status directly with one click
-- Glossary
+- Check jobs status with one click
+- Retrieve jobs results with one click
+- Glossary:
+  - Add, update or delete entries editing the `app_server/public/glossary_dictionary.json` file)
 
-#### Missing features (Up today - v0.2.0)
-- Dataset optimization
+*TWXML APIs not yet fully covered (v.0.2.0)*: Postman or similar is still required if you want to do something like:
 - Filters creations and usage
+- Scoring
 - Prescriptive job and results
+- Predictive evaluation
+
+Next version will include additional features. Remember that you can always add features and then share with the team :-)
 
 ### How to use it?
-Please refer to the **HOWTO.pdf** file into the *docs* folder
+Please refer to the *HOWTO.pdf* file into the *docs* folder
 
-### Credits
+#### Credits
 (2015) Idea and development by Mirco Veltri; released under [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/) license.
