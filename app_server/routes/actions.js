@@ -13,6 +13,7 @@ router.get('/dsList', ctrlTWXMLActions.datasetList);
 router.post('/create', ctrlTWXMLActions.datasetCreation);
 router.post('/configure', ctrlTWXMLActions.datasetConfiguration);
 router.get('/use', ctrlTWXMLActions.useDataset);
+router.post('/optimize', ctrlTWXMLActions.optimizeDataset);
 router.delete('/delete', ctrlTWXMLActions.datasetDeletion);
 router.post('/submitSignals', ctrlTWXMLActions.submitSignals);
 router.post('/submitProfiles', ctrlTWXMLActions.submitProfiles);

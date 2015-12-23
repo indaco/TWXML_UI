@@ -16,6 +16,8 @@ block content
 				a(href='#configure' aria-control='configure' role='tab' data-toggle='tab') Configure Dataset
 			li#update_li(role="presentation")
 				a(href='#upload' aria-control='upload' role='tab' data-toggle='tab') Upload Dataset
+			li#update_li(role="presentation")
+				a(href='#optimize' aria-control='optimize' role='tab' data-toggle='tab') Optimize Dataset
 			//li(role="presentation")
 			//	a(href='#filters' aria-control='filters' role='tab' data-toggle='tab') Filters
 			li(role="presentation")
@@ -39,6 +41,8 @@ block content
 				include partials/config_dataset.jade
 			#upload.tab-pane.fade(role="tabpanel")
 				include partials/file_upload.jade
+			#optimize.tab-pane.fade(role="tabpanel")
+				include partials/dataset_optimization.jade
 			//#filters.tab-pane.fade(role="tabpanel")
 			//	include partials/filters.jade
 			#signals.tab-pane.fade(role="tabpanel")

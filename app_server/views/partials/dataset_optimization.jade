@@ -1,0 +1,29 @@
+br
+br
+form#optimize_ds_form.form-horizontal
+  fieldset
+  .form-group
+    label.col-md-4.control-label(for="optimize_dsName_input") Dataset name
+    .col-md-6
+      input#optimize_dsName_input.form-control.input-md(type="text" name="optimize_dsName_input" placeholder="Dataset name" disabled="disabled")
+  .form-group
+    label.col-md-4.control-label(for="optimize")
+    .col-md-6
+      button#optimize_btn.btn.btn-primary(type='submit') Optimize
+output#optimize_status_response
+#accordion.panel-group
+  #optimizePanel.panel.panel-default
+    .panel-heading
+      h4.panel-title
+        a.collapsed(data-toggle='collapse', data-target='#collapseOptimize', href='#collapseOptimize') Job Status
+    #collapseOptimize.panel-collapse.collapse
+      .panel-body
+        form.form-inline
+          .form-group
+            label.sr-only(for='optimize_job_id_input') Job ID
+            .input-group
+              .input-group-addon ID
+              input#optimize_job_id_input.form-control(type="text", placeholder="Job ID")
+          button#get_optimization_status_btn.btn.btn-success(type='button') Get Job Status
+        pre
+          code#optimize_content

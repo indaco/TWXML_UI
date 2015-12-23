@@ -14,6 +14,7 @@ function _buildURL(path) {
 function _setDSInputFields(ds_name) {
   $('#config_dsName_input').val(ds_name);
   $('#upload_dsName_input').val(ds_name);
+  $('#optimize_dsName_input').val(ds_name);
   $('#filters_ds_name_input').val(ds_name);
   $('#signals_ds_name_input').val(ds_name);
   $('#profiles_ds_name_input').val(ds_name);
@@ -108,7 +109,7 @@ function useIt(datasetName, errorArea) {
 }
 
 /*********************/
-/* GET DATA SET LIST */
+/* GET DATASET LIST */
 /*********************/
 function getDataSetList() {
   $.get('/actions/dsList', function(data) {
@@ -132,9 +133,9 @@ $(document).ready(function() {
   // regtrieve existing datasets
   getDataSetList();
 
-  /*****************/
-  /* CHECK VERSION */
-  /*****************/
+  /***********************/
+  /* CHECK TWXML VERSION */
+  /***********************/
   $('#checkVersionBtn').click(function(event) {
     event.preventDefault();
     $.get('/actions/version', function(data) {
@@ -145,7 +146,7 @@ $(document).ready(function() {
   });
 
   /*******************/
-  /* CREATE DATA SET */
+  /* CREATE DATASET */
   /*******************/
   $('#createbtn').click(function(event) {
     event.preventDefault();
@@ -166,7 +167,7 @@ $(document).ready(function() {
   });
 
   /*******************/
-  /* USE DATA SET */
+  /* USE DATASET */
   /*******************/
   $('#dataSetTable').on('click', '.btn.btn-primary.btnUseIt', function(event) {
     event.preventDefault();
@@ -177,7 +178,7 @@ $(document).ready(function() {
   });
 
   /*******************/
-  /* DELETE DATA SET */
+  /* DELETE DATASET */
   /*******************/
   $('#dataSetTable').on('click', '.btn.btn-danger.btnDelete', function(event) {
     var answer = confirm("Do you wish to delete this data set?");
@@ -208,7 +209,7 @@ $(document).ready(function() {
   });
 
   /**********************/
-  /* CONFIGURE DATA SET */
+  /* CONFIGURE DATASET */
   /**********************/
   $('#input_json_file').bootstrapFileInput();
   $('#input_json_file').on('change', function(event) {
@@ -241,7 +242,7 @@ $(document).ready(function() {
   });
 
   /*******************/
-  /* UPLOAD DATA SET */
+  /* UPLOAD DATASET */
   /*******************/
   $('#upl').bootstrapFileInput();
   $('#upl').on('change', function(event) {
@@ -285,13 +286,41 @@ $(document).ready(function() {
   });
 
   /**********************************/
-  /* GET UPLOAD DATA SET JOB STATUS */
+  /* GET UPLOAD DATASET JOB STATUS */
   /**********************************/
   $('#get_upload_status_btn').click(function(event) {
     var params = {
       jobID: $('#upload_job_id_input').val()
     };
     twxml_module.getJobStatus(event, params, '#upload_content', '#upload_status_response');
+  });
+
+  /*******************/
+  /* OPTIMIZE DATASET */
+  /*******************/
+  $('#optimize_btn').click(function(event) {
+    event.preventDefault();
+    var _requestBody = {
+      "dsName": $('#optimize_dsName_input').val()
+    };
+    $.post('/actions/optimize', _requestBody, function(data, status) {
+      _showSuccessMessage('#optimize_status_response', status);
+      _showServerResponse('#optimize_content', data);
+      $('#optimize_job_id_input').val(data.resultId);
+      $('#collapseOptimize').addClass('in');
+    }).fail(function(data) {
+      _showErrorMessage('#optimize_status_response', data);
+    });
+  });
+
+  /*******************************/
+  /* GET OPTIMIZATION JOB STATUS */
+  /*******************************/
+  $('#get_optimization_status_btn').click(function(event) {
+    var params = {
+      jobID: $('#optimize_job_id_input').val()
+    };
+    twxml_module.getJobStatus(event, params, '#optimize_content', '#optimize_status_response');
   });
 
   /*******************/

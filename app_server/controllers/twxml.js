@@ -101,6 +101,25 @@ module.exports.useDataset = function(req, res) {
   });
 };
 
+module.exports.optimizeDataset = function(req, res) {
+  var _dsName = req.body.dsName;
+  var _configs = req.app.locals.neuron_config;
+  var options = {
+    url: utils.buildURL(_configs, "/datasets/" + _dsName + "/optimize"),
+    headers: req.app.locals.neuron_headers
+  };
+
+  unirest.post(options.url)
+  .headers(options.headers)
+  .end(function(response) {
+    if (response.error) {
+      sendJsonResponse(res, 400, utils.handleServerError(response));
+      return;
+    }
+    res.send(response.body);
+  });
+};
+
 module.exports.datasetDeletion = function(req, res) {
   var _dsName = req.body.dsName;
   var _configs = req.app.locals.neuron_config;
