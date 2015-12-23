@@ -509,6 +509,7 @@ $(document).ready(function() {
       _showServerResponse('#predictions_content', data);
       $('#predictions_job_id_input').val(data.resultId);
       $('#predictions_results_id_input').val(data.resultId);
+      $('#predictions_pva_id_input').val(data.resultId);
       $('#collapseFifteen').addClass('in');
     }).fail(function(data) {
       _showErrorMessage('#predictions_status_response', data);
@@ -536,6 +537,19 @@ $(document).ready(function() {
       jobID: $('#predictions_results_id_input').val()
     };
     twxml_module.getJobResults(event, params, '#predictions_results_content', '#predictions_status_response');
+  });
+
+  /*****************************/
+  /* GET PREDICTIVE STATISTICS */
+  /*****************************/
+  $('#get_predictions_pva_btn').click(function(event) {
+    event.preventDefault();
+    var params = {
+      jobType: 'pva',
+      dsName: $('#predictions_ds_name_input').val(),
+      jobID: $('#predictions_pva_id_input').val()
+    };
+    twxml_module.getJobResults(event, params, '#predictions_pva_content', '#predictions_pva_response');
   });
 
 });

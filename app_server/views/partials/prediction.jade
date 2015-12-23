@@ -93,8 +93,8 @@ output#predictions_status_response
         #panel16.panel.panel-default
           .panel-heading
             h4.panel-title
-              a(data-toggle='collapse', data-target='#collapseSixteeen', href='#collapseSixteeen') Predictions Results
-          #collapseSixteeen.panel-collapse.collapse
+              a(data-toggle='collapse', data-target='#collapseSixteen', href='#collapseSixteen') Predictions Results
+          #collapseSixteen.panel-collapse.collapse
             .panel-body
               form.form-inline
                 .form-group
@@ -105,3 +105,22 @@ output#predictions_status_response
                   button#get_predictions_results_btn.btn.btn-success(type='button') Get Results
               pre
                 code#predictions_results_content
+  .row
+    .col-md-12
+      #accordion.panel-group
+        #panel17.panel.panel-default
+          .panel-heading
+            h4.panel-title
+              a(data-toggle='collapse', data-target='#collapseSeventeen', href='#collapseSeventeen') Predicted Results vs. Actual Prediction Results
+          #collapseSeventeen.panel-collapse.collapse
+            .panel-body
+              form.form-inline
+                .form-group
+                  label.sr-only(for='predictions_pva_id_input') Job ID
+                  .input-group
+                    .input-group-addon ID
+                    input#predictions_pva_id_input.form-control(type="text", placeholder="Job ID")
+                  button#get_predictions_pva_btn.btn.btn-success(type='button') Get PVA Results
+              output#predictions_pva_response
+              pre
+                code#predictions_pva_content

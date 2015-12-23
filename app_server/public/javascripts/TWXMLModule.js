@@ -15,10 +15,11 @@ var TWXMLModule = library( function () {
   _jsonPrinter = JSONPrinter.json;
 
   // A private method
-  _buildServerErrorMessage = function(data) {
+  _buildServerErrorMessage = function(error) {
+    response = JSON.parse(error.responseText);
     var msg = "<div class='alert alert-danger'> " +
-    "<p>Error: <b>" + data.body.errorMessage +
-    "</b> ( ID: " + data.body.errorId + " )</p></div>";
+    "<p>Error: <b>" + response.errorMessage +
+    "</b> ( ID: " + response.errorId + " ) - " + error.statusText + "</p></div>";
     return msg;
   };
 

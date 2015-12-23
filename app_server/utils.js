@@ -13,8 +13,11 @@ handleServerError = function(data) {
 getJobResultsURLByJobType = function(params) {
   var _url = "";
   switch (params.jobType) {
+    case 'pva':
+      _url = "/datasets/" + params.dsName + "/prediction/" + params.jobID + "/pva";
+      break;
     default:
-      _url ="/datasets/" + params.dsName + "/" + params.jobType + "/" + params.jobID + "/results";
+      _url = "/datasets/" + params.dsName + "/" + params.jobType + "/" + params.jobID + "/results";
   }
   return _url;
 };
