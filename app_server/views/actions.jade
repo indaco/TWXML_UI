@@ -18,8 +18,8 @@ block content
 				a(href='#upload' aria-control='upload' role='tab' data-toggle='tab') Upload Dataset
 			li#update_li(role="presentation")
 				a(href='#optimize' aria-control='optimize' role='tab' data-toggle='tab') Optimize Dataset
-			//li(role="presentation")
-			//	a(href='#filters' aria-control='filters' role='tab' data-toggle='tab') Filters
+			li(role="presentation")
+				a(href='#filters' aria-control='filters' role='tab' data-toggle='tab') Filters
 			li(role="presentation")
 				a(href='#signals' aria-control='signals' role='tab' data-toggle='tab') Signals
 			li(role="presentation")
@@ -43,8 +43,8 @@ block content
 				include partials/file_upload.jade
 			#optimize.tab-pane.fade(role="tabpanel")
 				include partials/dataset_optimization.jade
-			//#filters.tab-pane.fade(role="tabpanel")
-			//	include partials/filters.jade
+			#filters.tab-pane.fade(role="tabpanel")
+				include partials/filters.jade
 			#signals.tab-pane.fade(role="tabpanel")
 				include partials/signals.jade 
 			#profiles.tab-pane.fade(role="tabpanel")
@@ -62,7 +62,9 @@ block content
 			neuron_app_id: "#{neuron_config.neuron_app_id}",
 			neuron_app_key: "#{neuron_config.neuron_app_key}"
 		};
-		
+
+	script(src="/javascripts/3rdparty/jquery.tabletojson.min.js")
+	script(src="/javascripts/functions.js")
 	script(src="/javascripts/actions.js")
 	script(src="/javascripts/validators.js")
 	script(src="/javascripts/JSONPrinter.js")

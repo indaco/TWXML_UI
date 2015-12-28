@@ -5,118 +5,14 @@ if (window.File && window.FileReader && window.FileList && window.Blob) {
   alert('The File APIs are not fully supported in this browser. Try with another one, e.g. Google Chrome');
 }
 
-function _buildURL(path) {
-  var _ssl = (_ssl == CONFIGS.ssl);
-  var protocol = (_ssl) ? "https" : "http";
-  return protocol + "://" + CONFIGS.host + ":" + CONFIGS.port + "/1.0" + path;
-}
-
-function _setDSInputFields(ds_name) {
-  $('#config_dsName_input').val(ds_name);
-  $('#upload_dsName_input').val(ds_name);
-  $('#optimize_dsName_input').val(ds_name);
-  $('#filters_ds_name_input').val(ds_name);
-  $('#signals_ds_name_input').val(ds_name);
-  $('#profiles_ds_name_input').val(ds_name);
-  $('#clusters_ds_name_input').val(ds_name);
-  $('#predictions_ds_name_input').val(ds_name);
-}
-
-function _setDSGoalsSelectField(goals) {
-  var opts = [];
-  $.each(goals, function(idx, obj) {
-    opts.push("<option value='" + obj + "'>" + obj + "</option>");
-  });
-  $('#signals_ds_goal_select').html(opts);
-  $('#profiles_ds_goal_select').html(opts);
-  $('#clusters_ds_goal_select').html(opts);
-  $('#predictions_ds_goal_select').html(opts);
-}
-
-function _drawRow(rowData) {
-  var row = $("<tr />");
-  $("#dataSetTable").append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-  row.append($('<td class="dsname">' + rowData.name + '</td>'));
-  row.append($('<td>' + rowData.description + '</td>'));
-  row.append($('<td>' + rowData.optimized + '</td>'));
-  row.append($("<td><button class='btn btn-primary btnUseIt' aria-label='Left Align'><span class='glyphicon glyphicon-pencil' aria-hidden='true'/> Use it</button> <button class='btn btn-danger btnDelete' aria-label='Left Align'><span class='glyphicon glyphicon-trash' aria-hidden='true'/> Delete</button></td>"));
-}
-
-function _clearCreationFields() {
-  $('#create_dsName').val("");
-  $('#description').val("");
-}
-
-function _countDataSets() {
-  $('#rowCount').html("[ # " + ($('#dataSetTable tr').length - 1) + " ]");
-}
-
-function _showAjaxErrorMessage(element, xhr) {
-  $(element).html("<div class='alert alert-danger'>Error: <b>" + JSON.parse(xhr.responseText).errorMessage + "</b></div>");
-  $(element).show();
-}
-
-function _showServerResponse(element, data) {
-  $(element).html(JSONPrinter.json.prettyPrint(data));
-}
-
-function _showSuccessMessage(element, msg) {
-  $(element).html("<div class='alert alert-success'>Status: <b>" + msg + "</b></div>");
-  $(element).show();
-}
-
-function _showInfoMessage(element, msg) {
-  $(element).html("<div class='alert alert-info'><b>Dataset Configuration Info:</b>" + msg + "</div>");
-  $(element).show();
-}
-
-function _showErrorMessage(element, data) {
-  var msg = "";
-  if (data.responseJSON.errorMessage != undefined) {
-    msg = "<div class='alert alert-danger'> " +
-      "Error: <br/><b>" + data.responseJSON.errorMessage +
-      "</b> <br/>( ID: " + data.responseJSON.errorId + " )</div>";
-  } else {
-    msg = "<div class='alert alert-danger'> Error: <br/><b>" + JSON.stringify(data.responseText) + "</b></div>";
-  }
-
-  $(element).html(msg);
-  $(element).show();
-}
-
-function _getDataSetInfo(json) {
-  return '<li>No. Features: <strong>' + json.length + '</strong></li>'
-        + '<li> Goals: <strong>' + _retrieveGoals(json) + '</strong></li>';
-}
-
-function _retrieveGoals(json) {
-  goals = [];
-  $.each(json, function(idx, obj) {
-     if(obj.objective === true) {
-       goals.push(obj.fieldName);
-     }
-   });
-   return goals;
-}
-
-function useIt(datasetName, errorArea) {
-  $.get('/actions/use', {dsName: datasetName}, function(data) {
-    _setDSInputFields(datasetName);
-    _setDSGoalsSelectField(_retrieveGoals(data));
-  }).fail(function(data) {
-    _showErrorMessage(errorArea, data);
-  });
-}
-
-/*********************/
+/********************/
 /* GET DATASET LIST */
-/*********************/
+/********************/
 function getDataSetList() {
   $.get('/actions/dsList', function(data) {
     for (i = 0; i < data.length; i++) {
       _drawRow(data[i], i);
     }
-    //_countDataSets();
   }).fail(function(data) {
     _showErrorMessage('#dsList_status_response', data);
   });
@@ -130,7 +26,7 @@ $(document).ready(function() {
   $(function() {
     $('[data-toggle="popover"]').popover();
   });
-  // regtrieve existing datasets
+  // retrieve existing datasets
   getDataSetList();
 
   /***********************/
@@ -166,9 +62,9 @@ $(document).ready(function() {
     });
   });
 
-  /*******************/
+  /***************/
   /* USE DATASET */
-  /*******************/
+  /***************/
   $('#dataSetTable').on('click', '.btn.btn-primary.btnUseIt', function(event) {
     event.preventDefault();
     var parent = $(this).parent("td").parent("tr");
@@ -296,9 +192,9 @@ $(document).ready(function() {
     twxml_module.getJobStatus(event, params, '#upload_content', '#upload_status_response');
   });
 
-  /*******************/
+  /********************/
   /* OPTIMIZE DATASET */
-  /*******************/
+  /********************/
   $('#optimize_btn').click(function(event) {
     event.preventDefault();
     var _requestBody = {
@@ -322,6 +218,60 @@ $(document).ready(function() {
       jobID: $('#optimize_job_id_input').val()
     };
     twxml_module.getJobStatus(event, params, '#optimize_content', '#optimize_status_response');
+  });
+
+  /************************/
+  /* ADD FILTER CONDITION */
+  /************************/
+  $('#add_filter_condition_btn').click(function(event) {
+    var row = {
+      fieldName: $('#dataset_features_select').find(":selected").val(),
+      expression: $('#filter_expression').val(),
+      type: $('#filter_type_select').find(":selected").val()
+    };
+    _drawFilterRow(row);
+    _clearFilterFields();
+  });
+
+
+  /*************************/
+  /* EDIT FILTER CONDITION */
+  /*************************/
+  $('#filtersTable').on('click', '.btn.btn-danger.btnEditFilterCondition', function(event) {
+    event.preventDefault();
+    var parent = $(this).parent("td").parent("tr");
+    var _filterCondition = $(this).closest("tr").find(".filterConditionName").text();
+  });
+
+  /***************************/
+  /* DELETE FILTER CONDITION */
+  /***************************/
+  $('#filtersTable').on('click', '.btn.btn-danger.btnDeleteFilterCondition', function(event) {
+    var answer = confirm("Do you wish to delete this condition?");
+    if (answer === true) {
+      event.preventDefault();
+      var parent = $(this).parent("td").parent("tr");
+      parent.animate({ 'background-color': '#fb6c6c'}, 300).fadeOut(300, function() {
+        parent.remove();
+      });
+      _clearFilterFields();
+    }
+  });
+
+  /*****************/
+  /* SUBMIT FILTER */
+  /*****************/
+  $('#save_filter_btn').click( function() {
+    var filterstable = $('#filtersTable').tableToJSON({
+      'ignoreColumns': [3]
+    });
+    var _requestBody = {
+      'dsName': $('#filters_ds_name_input').val(),
+      'name': $('#filter_name_input').val(),
+      'description': $('#filter_description_input').val(),
+      'filters': JSON.stringify(filterstable)
+    }
+    console.log(_requestBody);
   });
 
   /*******************/
