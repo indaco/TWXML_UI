@@ -251,7 +251,8 @@ $(document).ready(function() {
     var _dsName = $('#upload_dsName_input').val();
     var _headers = {
       'Accept': 'application/json',
-      'neuron-application-id':CONFIGS.neuron_app_id
+      'neuron-application-id':CONFIGS.neuron_app_id,
+      'neuron-application-key': CONFIGS.neuron_app_key
     };
     var _url = _buildURL("/datasets/" + _dsName + "/data");
     var _files = event.target.files;
