@@ -1,5 +1,5 @@
 # TWXML_UI
-## Experimental UI for working with ThingWorx Machine Learning
+## ThingWorx Machine Learning Experimental UI for Workers
 
 --------------------------------------------------------------------------------
 ### Disclaimer
@@ -40,9 +40,9 @@ So it lets you to:
 - Check jobs status with one click
 - Retrieve jobs results with one click
 - Glossary:
-  - Add, update or delete entries editing the `app_server/public/glossary_dictionary.json` file)
+  - Add, update or delete entries editing the `app_server/public/glossary_dictionary.json` file
 
-*TWXML APIs not yet fully covered (v.0.2.0)*: Postman or similar is still required if you want to do something like:
+*Current version (v.0.2.0) doesn't fully cover TWXML APIs*: Postman or similar are still required if you want to do something like:
 - Filters creations and usage
 - Scoring
 - Prescriptive job and results
@@ -51,7 +51,7 @@ So it lets you to:
 Next version will include additional features. Remember that you can always add features and then share with the team :-)
 
 ### How to use it?
-Please refer to the *HOWTO.pdf* file into the *docs* folder
+Please refer to the *HOWTO.md* file into the *docs* folder
 
 #### Credits
 (2015) Idea and development by Mirco Veltri; released under [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/) license.
