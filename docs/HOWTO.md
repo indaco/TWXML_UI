@@ -40,10 +40,10 @@ Here is a step-by-step guide to configure and start using TWXML_UI:
   - `node bin/www` for Linux or OSX users
 8. Open Google Chrome and go to [http://localhost:3000](http://localhost:3000)
 9. Click on the "Getting Started" link to start creating dataset and so on
-10. Enable CORS extension installed before to use TWXML_UI tool
+10. Enable CORS extension installed before using TWXML_UI tool. You have to click on the CORS icon as shown in the screenshot below (nothing more), otherwise it's not enabled - even if the CORS icon is green!
   ![enable_cors](images/enable_cors.png)
 
-**Remember** to enable the CORS plugin before you start working with the tool.
+**Remember** to enable the CORS plugin before you start working with the tool. When you forgot to enable CORS, the _Upload DataSet_ action will not work: You will simply get no feedback and no result in this step. To get it working again you have to enable CORS **and select a different dataset file** with the _Upload DataSet_ Browse button. This file can be whatever small file, it should fail and **invalidate the cache**. You can then immediately select the right dataset file and it will work.
 
 ### Step-by-Step installation on Neuron-solo VM
 It is possible to deploy TWXML_UI directly on the Neuron VM instead of installing it on your local computer. To do it follow instructions below:
