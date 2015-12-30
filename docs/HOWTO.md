@@ -40,7 +40,7 @@ Here is a step-by-step guide to configure and start using TWXML_UI:
   - `node bin/www` for Linux or OSX users
 8. Open Google Chrome and go to [http://localhost:3000](http://localhost:3000)
 9. Click on the "Getting Started" link to start creating dataset and so on
-9. Enable CORS extension installed before to use TWXML_UI tool
+10. Enable CORS extension installed before to use TWXML_UI tool
   ![enable_cors](images/enable_cors.png)
 
 **Remember** to enable the CORS plugin before you start working with the tool.
