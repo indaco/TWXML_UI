@@ -31,9 +31,9 @@ form#profilesform.form-horizontal
           option(value='false') False
     // Text input
     .form-group
-      label.col-md-4.control-label(for='profiles_filter_input') Filter
+      label.col-md-4.control-label(for='profiles_filter_select') Filter
       .col-md-6
-        input#profiles_filter_input.form-control.input-md(type="text", name="profiles_filter_input")
+        select#profiles_filter_select.form-control.input-md(name="profiles_filter_select", data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom" data-content="The name of the existing filter.")
     // Text input
     .form-group
       label.col-md-4.control-label(for='profiles_minPopulationPercentage_input') Min Population Percentage

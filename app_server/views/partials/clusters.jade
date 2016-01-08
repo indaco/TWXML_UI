@@ -18,6 +18,11 @@ form#clustersform.form-horizontal
       label.col-md-4.control-label(for='clusters_goal_desc_input') Description
       .col-md-6
         input#clusters_goal_desc_input.form-control.input-md(type="text", name="clusters_goal_desc_input")
+    // Select input
+    .form-group
+      label.col-md-4.control-label(for='clusters_filter_select') Filter
+      .col-md-6
+        select#clusters_filter_select.form-control.input-md(name="clusters_filter_select", data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom" data-content="The name of the existing filter.")
     // Text input
     .form-group
       label.col-md-4.control-label(for='clusters_hierarchy_input') Hierarchy

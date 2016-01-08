@@ -138,16 +138,64 @@ module.exports.datasetDeletion = function(req, res) {
   });
 };
 
+module.exports.submitFilter = function(req, res) {
+  var _dsName = req.body.dataSet;
+  var _configs = req.app.locals.neuron_config;
+  req.body.filters = JSON.parse(req.body.filters);
+
+  for (var i = 0; i < req.body.filters.length; i++) {
+    var item = req.body.filters[i];
+    item.expression = '["' + item.expression + '"]';
+    req.body.filters[i] = item;
+  }
+  var options = {
+    url: utils.buildURL(_configs, "/datasets/" + _dsName + "/filters"),
+    headers: req.app.locals.neuron_headers,
+    body: req.body
+  };
+  unirest.post(options.url)
+  .headers(options.headers)
+  .send(options.body)
+  .end(function(response) {
+    if (response.error) {
+      sendJsonResponse(res, 400, utils.handleServerError(response));
+      return;
+    }
+    res.send(response.body);
+  });
+};
+
+module.exports.filterListByDataset = function(req, res) {
+  var _dsName = req.query.dsName;
+  var _configs = req.app.locals.neuron_config;
+  var options = {
+    url: utils.buildURL(_configs, "/datasets/" + _dsName + "/filters" ),
+    headers: req.app.locals.neuron_headers
+  };
+  unirest.get(options.url)
+  .headers(options.headers)
+  .end(function(response) {
+    if (response.error) {
+      sendJsonResponse(res, 400, utils.handleServerError(response));
+      return;
+    }
+    res.send(response.body);
+  });
+};
+
+
 module.exports.submitSignals = function(req, res) {
   var _dsName = req.body.dsName;
   delete req.body.dsName; // removing dsName from the body params
   var _configs = req.app.locals.neuron_config;
+  req.body.maxAtATime = parseInt(req.body.maxAtATime);
+  
   var options = {
     url: utils.buildURL(_configs, "/datasets/" + _dsName + "/signals"),
     headers: req.app.locals.neuron_headers,
-    body: JSON.stringify(req.body)
+    body: req.body
   };
-
+  console.log(options.body);
   unirest.post(options.url)
   .headers(options.headers)
   .send(options.body)

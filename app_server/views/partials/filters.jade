@@ -2,18 +2,85 @@ br
 br
 form#filtersform.form-horizontal
   fieldset
-    // Text input
+    // Datset name text input
     .form-group
       label.col-md-4.control-label(for='filters_ds_name_input') Dataset name
       .col-md-6
         input#filters_ds_name_input.form-control.input-md(type="text", name="filters_ds_name_input", disabled="disabled")
-    // Text input
+    // Filter name text input
     .form-group
       label.col-md-4.control-label(for='filter_name_input') Filter name
       .col-md-6
         input#filter_name_input.form-control.input-md(type="text", name="filter_name_input")
-    // Text input
+    // Filter description text input
     .form-group
       label.col-md-4.control-label(for='filter_description_input') Description
       .col-md-6
         input#filter_description_input.form-control.input-md(type="text", name="filter_description_input")
+    // Filtering conditions table
+    .form-group
+      .col-md-2
+      .col-md-8
+        #filters_table_responsive
+          table#filtersTable.table.table-striped.table-bordered
+            caption
+              h3 Filtering conditions
+                span#filtersCount
+            thead
+              tr
+                th fieldName
+                th expression
+                th type
+                th(style="width: 20%") actions
+      .col-md-2
+    .col-md-2
+    .col-md-8
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title
+            span.glyphicon.glyphicon-plus-sign Add New Filter Condition
+        .panel-body
+          .form-group
+            fieldset
+              // Filed name text input
+              .form-group
+                label.col-md-4.control-label(for='dataset_features_select') Field Name
+                .col-md-6
+                  select#dataset_features_select.form-control(name='Feature', data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom" data-content="The name of the field or feature.")
+              // Expression text input
+              .form-group
+                label.col-md-4.control-label(for='filter_expression') Expression
+                .col-md-6
+                  input#filter_expression.form-control.input-md(name='filter_expression', type='text', data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom", data-content="The evaluation criteria for the feature")
+              // Select Filter Type
+              .form-group
+                label.col-md-4.control-label(for='filter_type_select') Type
+                .col-md-6
+                  select#filter_type_select.form-control(name='filter_type_select', data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom" data-content="Indicates whether you want the feature/expression combination to be considered an Inclusion or Exclusion condition.")
+                    option(value='INCLUDE') INCLUDE
+                    option(value='EXCLUDE') EXCLUDE
+              // Add Condition Button
+              .form-group
+                label.col-md-4.control-label(for='add_filter_condition_btn')
+                .col-md-4
+                  button#add_filter_condition_btn.btn.btn-primary(type='button') Add Condition
+      .col-md-2
+    // Save Filter Button
+    .form-group
+      label.col-md-4.control-label(for='save_filter_btn')
+      .col-md-4
+        button#save_filter_btn.btn.btn-success(type='submit', disabled="disabled") Save Filter
+    
+    output#createFilters_status_response
+    output#useFilters_status_response
+    .row
+      .col-md-12
+        #accordion.panel-group
+          #panel20.panel.panel-default
+            .panel-heading
+              h4.panel-title
+                a(data-toggle='collapse', data-target='#collapseTwenty', href='#collapseTwenty') Filter Results
+            #collapseTwenty.panel-collapse.collapse
+              .panel-body
+                pre
+                  code#filter_status_content

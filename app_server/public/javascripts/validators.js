@@ -45,7 +45,28 @@ $(document).ready(function() {
       invalid: 'glyphicon glyphicon-remove',
       validating: 'glyphicon glyphicon-refresh'
     },
-    fields: {}
+    fields: {
+      filter_name_input: {
+        validators: {
+          notEmpty: {
+            message: 'Filter name is required'
+          },
+          stringLength: {
+            min: 4,
+            max: 30,
+            message: 'The name must be more than 4 and less than 30 characters long'
+          },
+          regexp: {
+            regexp: /^[a-zA-Z0-9_]+$/,
+            message: 'The name can only consist of alphabetical, number and underscore'
+          }
+        }
+      }
+    }
+  }).on('success.field.fv', function(e, data) {
+    if (data.fv.getInvalidFields().length > 0) { // There is invalid field
+      data.fv.disableSubmitButtons(true);
+    }
   });
 
   /***************************/

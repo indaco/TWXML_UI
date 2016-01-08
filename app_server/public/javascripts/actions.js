@@ -71,6 +71,7 @@ $(document).ready(function() {
     var _dsName = $(this).closest("tr").find(".dsname").text();
 
     useIt(_dsName, '#dsList_status_response');
+    useFilters(_dsName, '#dsList_status_response');
   });
 
   /*******************/
@@ -122,9 +123,8 @@ $(document).ready(function() {
         fileContent: JSON.stringify(content)
       };
       $.post('/actions/configure', _requestBody, function(data, status) {
-          _showInfoMessage('#json_list', _getDataSetInfo(data))
+          _showInfoMessage('#json_list', _getDataSetInfo(data));
           _showSuccessMessage('#config_status_response', status);
-          //$('#json_list').html(_getDataSetInfo(data));
           _showServerResponse('#json_content', data);
           useIt(_requestBody.dsName, '#config_status_response');
       }).fail(function(data) {
@@ -233,16 +233,6 @@ $(document).ready(function() {
     _clearFilterFields();
   });
 
-
-  /*************************/
-  /* EDIT FILTER CONDITION */
-  /*************************/
-  $('#filtersTable').on('click', '.btn.btn-danger.btnEditFilterCondition', function(event) {
-    event.preventDefault();
-    var parent = $(this).parent("td").parent("tr");
-    var _filterCondition = $(this).closest("tr").find(".filterConditionName").text();
-  });
-
   /***************************/
   /* DELETE FILTER CONDITION */
   /***************************/
@@ -262,16 +252,24 @@ $(document).ready(function() {
   /* SUBMIT FILTER */
   /*****************/
   $('#save_filter_btn').click( function() {
-    var filterstable = $('#filtersTable').tableToJSON({
+    var filterConditionsTable = $('#filtersTable').tableToJSON({
       'ignoreColumns': [3]
     });
+
     var _requestBody = {
-      'dsName': $('#filters_ds_name_input').val(),
-      'name': $('#filter_name_input').val(),
+      'dataSet': $('#filters_ds_name_input').val(),
+      'name': $('#filter_name_input').val().trim().replace(/ /g,"_"),
       'description': $('#filter_description_input').val(),
-      'filters': JSON.stringify(filterstable)
-    }
-    console.log(_requestBody);
+      'filters': JSON.stringify(filterConditionsTable)
+    };
+
+    $.post('/actions/createFilter', _requestBody, function(data, status) {
+      _showSuccessMessage('#createFilters_status_response', status);
+      _showServerResponse('#filter_status_content', data);
+      useFilters(_requestBody.dataSet, '#useFilters_status_response');
+    }).fail(function(data) {
+      _showErrorMessage('#filtersList_status_response', data);
+    });
   });
 
   /*******************/
@@ -283,6 +281,7 @@ $(document).ready(function() {
       'dsName': $('#signals_ds_name_input').val(),
       'goal': $('#signals_ds_goal_select').find(":selected").val(),
       'description': $('#signals_goal_desc_input').val(),
+      //'filter': $('#signals_filter_select').find(":selected").val(),
       'maxAtATime': $('#signals_max_input').val()
     };
 
@@ -422,7 +421,7 @@ $(document).ready(function() {
   /***********************/
   $('#predictions-btn').click(function(event) {
     event.preventDefault();
-    var _learners = new Array();
+    var _learners = [];
     var _learningTechnique;
     if ($('#BACKPROP_checkbox').is(':checked')) {
          _learningTechnique = {'learningTechnique': $('#BACKPROP').val(), 'args': { } };

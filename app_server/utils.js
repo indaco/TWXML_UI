@@ -4,10 +4,15 @@ buildURL = function(config, path) {
 };
 
 handleServerError = function(data) {
-  return {
-    "errorId": data.body.errorId,
-    "errorMessage": data.body.errorMessage
-  };
+  var msg = { errorId: "", errorMessage: "" };
+  if (data.body.errorId !== null && data.body.errorId !== undefined) {
+    msg.errorId = data.body.errorId;
+    msg.errorMessage = data.body.errorMessage;
+  } else {
+      msg.errorId = data.code;
+      msg.errorMessage = data.body;
+  }
+  return msg;
 };
 
 getJobResultsURLByJobType = function(params) {

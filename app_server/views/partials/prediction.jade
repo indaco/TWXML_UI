@@ -17,6 +17,11 @@ form#predictionsform.form-horizontal
       label.col-md-4.control-label(for='predictions_goal_desc_input') Description
       .col-md-6
         input#predictions_goal_desc_input.form-control.input-md(type="text", name="predictions_goal_desc_input")
+    // Select input
+    .form-group
+      label.col-md-4.control-label(for='prediction_filter_select') Filter
+      .col-md-6
+        select#prediction_filter_select.form-control.input-md(name="prediction_filter_select", data-toggle="popover", data-animation="true", data-trigger="hover", data-placement="bottom" data-content="The name of the existing filter.")
     // Text input
     .form-group
       label.col-md-4.control-label(for='predictions_iterativeTrainingRecordSampleSize_input') Iterative Training Record Sample Size

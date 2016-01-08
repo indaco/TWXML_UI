@@ -17,11 +17,12 @@ function _showInfoMessage(element, msg) {
   $(element).show();
 }
 
-function _showErrorMessage(element, data) {
+function _showErrorMessage(element, data, functionName) {
   var msg = "";
-  if (data.responseJSON.errorMessage != undefined) {
+  var fncName = (functionName !== null) ? functionName : "";
+  if (data.responseJSON !== null && data.responseJSON !== undefined && data.responseJSON.errorMessage !== null && data.responseJSON.errorMessage !== undefined) {
     msg = "<div class='alert alert-danger'> " +
-      "Error: <br/><b>" + data.responseJSON.errorMessage +
+      "Error: " + fncName + "<br/><b>" + data.responseJSON.errorMessage +
       "</b> <br/>( ID: " + data.responseJSON.errorId + " )</div>";
   } else {
     msg = "<div class='alert alert-danger'> Error: <br/><b>" + JSON.stringify(data.responseText) + "</b></div>";
@@ -82,7 +83,7 @@ function _drawFilterRow(rowData) {
   row.append($('<td class="filterConditionName">' + rowData.fieldName + '</td>'));
   row.append($('<td>' + rowData.expression + '</td>'));
   row.append($('<td>' + rowData.type + '</td>'));
-  row.append($("<td><button class='btn btn-primary btnEditFilterCondition' aria-label='Left Align'><span class='glyphicon glyphicon-pencil' aria-hidden='true'/> Edit</button> <button class='btn btn-danger btnDeleteFilterCondition' aria-label='Left Align'><span class='glyphicon glyphicon-remove' aria-hidden='true'/> Delete</button></td>"));
+  row.append($("<td><button class='btn btn-danger btnDeleteFilterCondition' aria-label='Left Align'><span class='glyphicon glyphicon-remove' aria-hidden='true'/> Delete</button></td>"));
 }
 
 function _clearCreationFields() {
@@ -97,8 +98,8 @@ function _clearFilterFields() {
 }
 
 function _getDataSetInfo(json) {
-  return '<li>No. Features: <strong>' + json.length + '</strong></li>'
-        + '<li> Goals: <strong>' + _retrieveGoals(json) + '</strong></li>';
+  return '<li>No. Features: <strong>' + json.length + '</strong></li>' +
+          '<li> Goals: <strong>' + _retrieveGoals(json) + '</strong></li>';
 }
 
 function _retrieveFeatures(json) {
@@ -125,6 +126,37 @@ function useIt(datasetName, errorArea) {
     _setDSFeaturesForFilters(_retrieveFeatures(data));
     _setDSGoalsSelectField(_retrieveGoals(data));
   }).fail(function(data) {
-    _showErrorMessage(errorArea, data);
+    _showErrorMessage(errorArea, data, "useIt");
   });
+}
+
+function _retrieveFilters(json) {
+  filters = [];
+  $.each(json, function(idx, obj) {
+    $.each(obj.filters, function(i, filter) {
+      filters.push(obj.name);
+    });
+   });
+   return filters;
+}
+
+function _setDSFilters(goals) {
+  var opts = [];
+  opts.push("<option value=''>Select existing filter</option>");
+  $.each(goals, function(idx, obj) {
+    opts.push("<option value='" + obj + "'>" + obj + "</option>");
+  });
+  $('#signals_filter_select').html(opts);
+  $('#profiles_filter_select').html(opts);
+  $('#clusters_filter_select').html(opts);
+  $('#prediction_filter_select').html(opts);
+}
+
+function useFilters(datasetName, errorArea) {
+  $.get('/actions/filterList', {dsName: datasetName}, function(data) {
+    _setDSFilters(_retrieveFilters(data));
+  }).fail(function(data) {
+    _showErrorMessage(errorArea, data, "useFilters");
+  });
+
 }
