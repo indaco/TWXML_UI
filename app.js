@@ -1,3 +1,14 @@
+/*
+ *   TWXML_UI
+ *   ~~~~~~~~~~~~~~~~
+ *
+ *  Experimental UI for Thingworx Machine Learning.
+ *
+ *  :version: 0.1
+ *  :copyright: 2015 by Mirco Veltri
+ *  :license: GPL, see LICENSE for more details
+ */
+
 // Required NodeJS modules
 // ------------------------------------------------
 var express     = require('express'),
