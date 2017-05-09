@@ -52,6 +52,3 @@ Next version will include additional features. Remember that you can always add 
 
 ### How to use it?
 Please refer to the *HOWTO.md* file into the *docs* folder
-
-#### Credits
-(2015) Idea and development by Mirco Veltri; released under [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/) license.
