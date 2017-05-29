@@ -8,9 +8,9 @@
 
 This is a personal experimental project started more than 2 years ago and never completed.
 
-Not sure it works today mainly because I am not aware anymore of ThingWorx Machine Learning.
+Not sure if it works today because I am not aware anymore on ThingWorx Machine Learning.
 
-Personally, this project is **deprecated**.
+Personally, this project is **out of maintenance**.
 
 --------------------------------------------------------------------------------
 
