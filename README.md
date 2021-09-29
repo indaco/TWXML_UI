@@ -8,7 +8,7 @@
 
 ### Notes
 
-This is a personal experimental project started more than 2 years ago and never completed.
+This is a personal experimental project started long time ago and never completed for several reasons.
 
 Not sure if it works today because I am not aware anymore on ThingWorx Machine Learning.
 
